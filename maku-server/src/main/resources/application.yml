@@ -5,7 +5,7 @@ server:
     threads:
       max: 1000
       min-spare: 30
-  port: 8080
+  port: 9001
   servlet:
     context-path: /
     session:
@@ -51,6 +51,8 @@ mybatis-plus:
       logic-delete-value: 1
       # 逻辑未删除值
       logic-not-delete-value: 0
+      # 逻辑删除字段
+      logic-delete-field: deleted
     banner: false
   # 原生配置
   configuration:
@@ -66,7 +68,7 @@ mybatis-plus:
 #easy trans 数据翻译组件
 easy-trans:
   #启用redis缓存 如果不用redis请设置为false
-  is-enable-redis: false
+  is-enable-redis: true
   #启用全局翻译(拦截所有responseBody进行自动翻译)，如果对于性能要求很高可关闭此配置
   is-enable-global: true
   #启用平铺模式

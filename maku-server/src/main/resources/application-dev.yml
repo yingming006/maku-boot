@@ -1,6 +1,6 @@
 spring:
   redis:
-    database: 1
+    database: 4
     host: localhost
     port: 6379
     #password:
@@ -9,8 +9,8 @@ spring:
     # MySQL8
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/maku_boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
-    username: maku
-    password: 123456
+    username: root
+    password: root
     # 达梦
     #    driver-class-name: dm.jdbc.driver.DmDriver
     #    url: jdbc:dm://192.168.3.19:5236/maku_boot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true

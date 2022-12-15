@@ -7,6 +7,8 @@
 - 开发文档：[https://maku.net/docs/maku-boot](https://maku.net/docs/maku-boot)
 - 演示环境：https://demo.maku.net/maku-boot
 
+- 密码：`admin/admin123
+
 ## 前端工程
 
 - Gitee仓库：https://gitee.com/makunet/maku-admin

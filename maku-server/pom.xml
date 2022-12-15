@@ -17,7 +17,7 @@
         </dependency>
         <dependency>
             <groupId>net.maku</groupId>
-            <artifactId>maku-boot-new</artifactId>
+            <artifactId>maku-boot-education</artifactId>
             <version>${revision}</version>
         </dependency>
         <!--        <dependency>-->
@@ -25,11 +25,11 @@
         <!--            <artifactId>maku-module-quartz</artifactId>-->
         <!--            <version>${revision}</version>-->
         <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>net.maku</groupId>-->
-        <!--            <artifactId>maku-module-generator</artifactId>-->
-        <!--            <version>${revision}</version>-->
-        <!--        </dependency>-->
+                <dependency>
+                    <groupId>net.maku</groupId>
+                    <artifactId>maku-module-generator</artifactId>
+                    <version>${revision}</version>
+                </dependency>
         <!--        <dependency>-->
         <!--            <groupId>net.maku</groupId>-->
         <!--            <artifactId>maku-module-message</artifactId>-->

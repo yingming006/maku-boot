@@ -1,0 +1,8 @@
+# 配置忽略认证的URL地址
+auth:
+  ignore_urls:
+    - /sys/auth/captcha
+    - /sys/auth/login
+    - /sys/auth/send/code
+    - /sys/auth/mobile
+    - /upload/**
