@@ -10,8 +10,10 @@ DROP TABLE IF EXISTS `edu_clazz`;
 CREATE TABLE IF NOT EXISTS `edu_clazz`
 (
     `id`            bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `grade`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '年级',
-    `clazz`         varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '班级',
+    `name`          varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '行政班级',
+    `entrance_year` smallint                                                     DEFAULT NULL COMMENT '入学年',
+    `grade_id`      bigint                                                       DEFAULT NULL COMMENT '年级id',
+    `semester_id`   bigint                                                       DEFAULT NULL COMMENT '学期id',
     `headmaster_id` bigint                                                       DEFAULT NULL COMMENT '班主任id',
     `headmaster`    varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '班主任',
     `is_enabled`    tinyint                                                      DEFAULT NULL COMMENT '是否启用',
@@ -23,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `edu_clazz`
     `update_time`   datetime                                                     DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 5
+  AUTO_INCREMENT = 6
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='班级信息表';
 
@@ -100,6 +102,40 @@ CREATE TABLE IF NOT EXISTS `edu_exam_score`
 
 -- 数据导出被取消选择。
 
+-- 导出  表 maku_boot.edu_grade 结构
+DROP TABLE IF EXISTS `edu_grade`;
+CREATE TABLE IF NOT EXISTS `edu_grade`
+(
+    `id`          bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `name`        varchar(50) COLLATE utf8mb4_general_ci                       DEFAULT NULL COMMENT '年级',
+    `stage`       varchar(50) COLLATE utf8mb4_general_ci                       DEFAULT NULL COMMENT '阶段',
+    `is_enabled`  tinyint                                                      DEFAULT NULL COMMENT '是否启用',
+    `deleted`     tinyint                                                      DEFAULT NULL COMMENT '是否删除',
+    `version`     tinyint                                                      DEFAULT NULL COMMENT '乐观锁',
+    `creator`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '创建人',
+    `create_time` datetime                                                     DEFAULT NULL COMMENT '创建时间',
+    `updater`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '更新人',
+    `update_time` datetime                                                     DEFAULT NULL COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 45
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='年级信息表';
+
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (1, '一年级', '1', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (2, '二年级', '1', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (3, '三年级', '1', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (4, '四年级', '1', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (5, '五年级', '1', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (6, '六年级', '1', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (7, '七年级', '2', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (8, '八年级', '2', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (9, '九年级', '2', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (10, '高一', '3', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (11, '高二', '3', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (12, '高三', '3', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
+
+
 -- 导出  表 maku_boot.edu_semester 结构
 DROP TABLE IF EXISTS `edu_semester`;
 CREATE TABLE IF NOT EXISTS `edu_semester`
@@ -119,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `edu_semester`
     `update_time` datetime                                                     DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 6
+  AUTO_INCREMENT = 8
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='学期信息表';
 
@@ -168,6 +204,7 @@ CREATE TABLE IF NOT EXISTS `edu_teacher`
     `update_time` datetime                                                     DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
+  AUTO_INCREMENT = 2
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='教师信息表';
 
