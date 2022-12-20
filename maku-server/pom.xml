@@ -17,7 +17,7 @@
         </dependency>
         <dependency>
             <groupId>net.maku</groupId>
-            <artifactId>maku-boot-education</artifactId>
+            <artifactId>maku-boot-edu</artifactId>
             <version>${revision}</version>
         </dependency>
         <!--        <dependency>-->
