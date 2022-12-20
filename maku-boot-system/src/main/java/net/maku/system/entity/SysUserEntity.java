@@ -28,10 +28,6 @@ public class SysUserEntity extends BaseEntity {
      */
     private String avatar;
     /**
-     * 性别   0：男   1：女   2：未知
-     */
-    private Integer gender;
-    /**
      * 邮箱
      */
     private String email;

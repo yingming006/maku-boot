@@ -28,6 +28,16 @@ public class EduClazzEntity extends BaseEntity {
 	private String clazz;
 
 	/**
+	 * 班主任id
+	 */
+	private Long headmasterId;
+
+	/**
+	 * 班主任
+	 */
+	private String headmaster;
+
+	/**
 	* 是否启用
 	*/
 	private Integer isEnabled;

@@ -32,13 +32,6 @@ public class SysUserExcelVO implements Serializable, TransPojo {
     @ExcelProperty("姓名")
     private String realName;
 
-    @ExcelIgnore
-    @Trans(type = TransType.DICTIONARY, key = "user_gender", ref = "genderLabel")
-    private Integer gender;
-
-    @ExcelProperty(value = "性别")
-    private String genderLabel;
-
     @ExcelProperty("邮箱")
     private String email;
 

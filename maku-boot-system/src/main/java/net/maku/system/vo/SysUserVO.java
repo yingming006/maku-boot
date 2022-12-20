@@ -46,10 +46,6 @@ public class SysUserVO implements Serializable, TransPojo {
     @Schema(description = "头像")
     private String avatar;
 
-    @Schema(description = "性别 0：男   1：女   2：未知", required = true)
-    @Range(min = 0, max = 2, message = "性别不正确")
-    private Integer gender;
-
     @Schema(description = "邮箱")
     @Email(message = "邮箱格式不正确")
     private String email;

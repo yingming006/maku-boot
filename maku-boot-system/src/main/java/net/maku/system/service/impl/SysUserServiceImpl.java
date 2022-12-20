@@ -63,7 +63,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserDao, SysUserEntit
         Map<String, Object> params = new HashMap<>();
         params.put("username", query.getUsername());
         params.put("mobile", query.getMobile());
-        params.put("gender", query.getGender());
 
         // 数据权限
         params.put(Constant.DATA_SCOPE, getDataScope("t1", null));
