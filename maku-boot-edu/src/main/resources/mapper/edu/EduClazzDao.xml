@@ -8,7 +8,9 @@
         <result property="name" column="name"/>
         <result property="entranceYear" column="entrance_year"/>
         <result property="gradeId" column="grade_id"/>
+        <result property="gradeName" column="grade_name"/>
         <result property="semesterId" column="semester_id"/>
+        <result property="semesterName" column="semester_name"/>
         <result property="headmasterId" column="headmaster_id"/>
         <result property="headmaster" column="headmaster"/>
         <result property="isEnabled" column="is_enabled"/>

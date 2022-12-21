@@ -32,10 +32,4 @@ public class EduGradeEntity extends BaseEntity {
 	*/
 	private Integer isEnabled;
 
-
-
-
-
-
-
 }

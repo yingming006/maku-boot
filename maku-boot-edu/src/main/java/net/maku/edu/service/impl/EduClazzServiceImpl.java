@@ -1,9 +1,11 @@
 package net.maku.edu.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
+import net.maku.edu.entity.EduSemesterEntity;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.impl.BaseServiceImpl;
 import net.maku.edu.convert.EduClazzConvert;
@@ -30,14 +32,15 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
     @Override
     public PageResult<EduClazzVO> page(EduClazzQuery query) {
         IPage<EduClazzEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
-        PageResult<EduClazzVO> pageResult = new PageResult<>(EduClazzConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
-        List<EduClazzVO> list = pageResult.getList();
-        return pageResult;
+
+        return new PageResult<>(EduClazzConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
     }
 
     private LambdaQueryWrapper<EduClazzEntity> getWrapper(EduClazzQuery query) {
         LambdaQueryWrapper<EduClazzEntity> wrapper = Wrappers.lambdaQuery();
-
+        if (StrUtil.isBlank(query.getOrder())) {
+            wrapper.orderByDesc(EduClazzEntity::getEntranceYear);
+        }
         return wrapper;
     }
 

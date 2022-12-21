@@ -30,8 +30,14 @@ public class EduClazzVO implements Serializable {
 	@Schema(description = "年级id")
 	private Integer gradeId;
 
+	@Schema(description = "年级")
+	private String gradeName;
+
 	@Schema(description = "学期id")
 	private Long semesterId;
+
+	@Schema(description = "学期")
+	private String semesterName;
 
 	@Schema(description = "班主任id")
 	private Long headmasterId;
