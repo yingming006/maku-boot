@@ -25,7 +25,7 @@ public class EduClazzEntity extends BaseEntity {
 	/**
 	 * 入学年份
 	 */
-	private Integer entranceYear;
+	private String entranceYear;
 
 	/**
 	* 年级id
@@ -33,14 +33,29 @@ public class EduClazzEntity extends BaseEntity {
 	private Long gradeId;
 
 	/**
+	 * 年级
+	 */
+	private String gradeName;
+
+	/**
 	 * 学期id
 	 */
 	private Long semesterId;
 
 	/**
+	 * 学期
+	 */
+	private String semesterName;
+
+	/**
 	 * 班主任id
 	 */
 	private Long headmasterId;
+
+	/**
+	 * 班主任
+	 */
+	private String headmaster;
 
 	/**
 	* 是否启用

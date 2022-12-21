@@ -1,19 +1,21 @@
 package net.maku.edu.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.AllArgsConstructor;
-import net.maku.edu.entity.EduSemesterEntity;
-import net.maku.framework.common.page.PageResult;
-import net.maku.framework.common.service.impl.BaseServiceImpl;
 import net.maku.edu.convert.EduClazzConvert;
+import net.maku.edu.dao.EduClazzDao;
 import net.maku.edu.entity.EduClazzEntity;
 import net.maku.edu.query.EduClazzQuery;
-import net.maku.edu.vo.EduClazzVO;
-import net.maku.edu.dao.EduClazzDao;
 import net.maku.edu.service.EduClazzService;
+import net.maku.edu.service.EduGradeService;
+import net.maku.edu.service.EduSemesterService;
+import net.maku.edu.service.EduTeacherService;
+import net.maku.edu.vo.EduClazzVO;
+import net.maku.framework.common.page.PageResult;
+import net.maku.framework.common.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,10 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEntity> implements EduClazzService {
+
+    private final EduGradeService eduGradeService;
+    private final EduSemesterService eduSemesterService;
+    private final EduTeacherService eduTeacherService;
 
     @Override
     public PageResult<EduClazzVO> page(EduClazzQuery query) {
@@ -47,14 +53,14 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
     @Override
     public void save(EduClazzVO vo) {
         EduClazzEntity entity = EduClazzConvert.INSTANCE.convert(vo);
-
+        transField(entity, vo);
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduClazzVO vo) {
         EduClazzEntity entity = EduClazzConvert.INSTANCE.convert(vo);
-
+        transField(entity, vo);
         updateById(entity);
     }
 
@@ -64,4 +70,10 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
         removeByIds(idList);
     }
 
+
+    private void transField(EduClazzEntity entity, EduClazzVO vo) {
+        entity.setGradeName(eduGradeService.getById(vo.getGradeId()).getName());
+        entity.setSemesterName(eduSemesterService.getById(vo.getSemesterId()).getName());
+        entity.setHeadmaster(eduTeacherService.getById(vo.getHeadmasterId()).getName());
+    }
 }

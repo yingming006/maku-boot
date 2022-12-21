@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * 日期处理
- * 
+ *
  * @author 阿沐 babamu@126.com
  */
 public class DateUtils {
@@ -15,6 +15,8 @@ public class DateUtils {
 	public final static String DATE_PATTERN = "yyyy-MM-dd";
 	/** 时间格式(yyyy-MM-dd HH:mm:ss) */
 	public final static String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    /** 时间格式(yyyy) */
+    public final static String YEAR_PATTERN = "yyyy";
 
     /**
      * 日期格式化 日期格式为：yyyy-MM-dd

@@ -1,5 +1,6 @@
 package net.maku.edu.vo;
 
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class EduClazzVO implements Serializable {
 	private String name;
 
 	@Schema(description = "入学年份")
-	private Integer entranceYear;
+	private String entranceYear;
 
 	@Schema(description = "年级id")
 	private Integer gradeId;
