@@ -53,14 +53,12 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
     @Override
     public void save(EduClazzVO vo) {
         EduClazzEntity entity = EduClazzConvert.INSTANCE.convert(vo);
-        transField(entity, vo);
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduClazzVO vo) {
         EduClazzEntity entity = EduClazzConvert.INSTANCE.convert(vo);
-        transField(entity, vo);
         updateById(entity);
     }
 
@@ -70,10 +68,4 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
         removeByIds(idList);
     }
 
-
-    private void transField(EduClazzEntity entity, EduClazzVO vo) {
-        entity.setGradeName(eduGradeService.getById(vo.getGradeId()).getName());
-        entity.setSemesterName(eduSemesterService.getById(vo.getSemesterId()).getName());
-        entity.setHeadmaster(eduTeacherService.getById(vo.getHeadmasterId()).getName());
-    }
 }

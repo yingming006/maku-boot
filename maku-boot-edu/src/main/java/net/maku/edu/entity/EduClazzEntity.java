@@ -33,19 +33,9 @@ public class EduClazzEntity extends BaseEntity {
 	private Long gradeId;
 
 	/**
-	 * 年级
-	 */
-	private String gradeName;
-
-	/**
 	 * 学期id
 	 */
 	private Long semesterId;
-
-	/**
-	 * 学期
-	 */
-	private String semesterName;
 
 	/**
 	 * 班主任id
@@ -53,9 +43,9 @@ public class EduClazzEntity extends BaseEntity {
 	private Long headmasterId;
 
 	/**
-	 * 班主任
+	 * 开设课程
 	 */
-	private String headmaster;
+	private String courseList;
 
 	/**
 	* 是否启用

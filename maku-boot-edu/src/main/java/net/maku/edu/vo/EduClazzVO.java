@@ -1,11 +1,11 @@
 package net.maku.edu.vo;
 
-import com.alibaba.excel.annotation.format.DateTimeFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import java.io.Serializable;
 import net.maku.framework.common.utils.DateUtils;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -45,6 +45,9 @@ public class EduClazzVO implements Serializable {
 
 	@Schema(description = "班主任")
 	private String headmaster;
+
+	@Schema(description = "开设课程")
+	private String courseList;
 
 	@Schema(description = "是否启用")
 	private Integer isEnabled;
