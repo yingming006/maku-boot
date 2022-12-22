@@ -29,12 +29,13 @@ public class EduStudentServiceImpl extends BaseServiceImpl<EduStudentDao, EduStu
 
     @Override
     public PageResult<EduStudentVO> page(EduStudentQuery query) {
-        IPage<EduStudentEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
+        IPage<EduStudentVO> page = baseMapper.selectListPage(getPage(query), getWrapper(query));
+        Long total = baseMapper.selectCount(getWrapper(query));
 
-        return new PageResult<>(EduStudentConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        return new PageResult<>(page.getRecords(), total);
     }
 
-    private LambdaQueryWrapper<EduStudentEntity> getWrapper(EduStudentQuery query){
+    private LambdaQueryWrapper<EduStudentEntity> getWrapper(EduStudentQuery query) {
         LambdaQueryWrapper<EduStudentEntity> wrapper = Wrappers.lambdaQuery();
 
         return wrapper;

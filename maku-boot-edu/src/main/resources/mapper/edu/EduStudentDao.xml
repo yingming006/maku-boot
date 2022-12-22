@@ -18,4 +18,19 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <sql id="stuColumns">
+        stu.id,stu.no,stu.name,stu.gender,stu.clazz_id,stu.clazz_id,stu.is_enabled
+        ,stu.deleted,stu.version,stu.creator,stu.create_time,stu.updater,stu.update_time
+    </sql>
+
+    <select id="selectListPage" resultType="net.maku.edu.vo.EduStudentVO">
+        select
+        <include refid="stuColumns">
+            <property name="stu" value="stu"/>
+        </include>
+        , cla.grade_id
+        from edu_student stu
+        left join edu_clazz cla on stu.clazz_id = cla.id
+        ${ew.customSqlSegment}
+    </select>
 </mapper>
