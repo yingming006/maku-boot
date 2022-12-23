@@ -3,6 +3,7 @@ package net.maku.edu.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import net.maku.edu.service.EduExamClazzService;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.utils.Result;
 import net.maku.edu.convert.EduExamConvert;
@@ -29,6 +30,10 @@ import java.util.List;
 public class EduExamController {
     private final EduExamService eduExamService;
 
+    private final EduExamClazzService eduExamClazzService;
+
+    private final EduExamConvert eduExamConvert;
+
     @GetMapping("page")
     @Operation(summary = "分页")
     @PreAuthorize("hasAuthority('edu:exam:page')")
@@ -44,15 +49,16 @@ public class EduExamController {
     public Result<EduExamVO> get(@PathVariable("id") Long id){
         EduExamEntity entity = eduExamService.getById(id);
 
-        return Result.ok(EduExamConvert.INSTANCE.convert(entity));
+        return Result.ok(eduExamConvert.convert(entity));
     }
 
     @PostMapping
     @Operation(summary = "保存")
     @PreAuthorize("hasAuthority('edu:exam:save')")
     public Result<String> save(@RequestBody EduExamVO vo){
-        eduExamService.save(vo);
-
+        Long examId = eduExamService.save(vo);
+        vo.setId(examId);
+        eduExamClazzService.save(vo);
         return Result.ok();
     }
 
@@ -61,7 +67,7 @@ public class EduExamController {
     @PreAuthorize("hasAuthority('edu:exam:update')")
     public Result<String> update(@RequestBody @Valid EduExamVO vo){
         eduExamService.update(vo);
-
+        eduExamClazzService.update(vo);
         return Result.ok();
     }
 

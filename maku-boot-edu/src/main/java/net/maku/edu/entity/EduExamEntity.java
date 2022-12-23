@@ -32,17 +32,17 @@ public class EduExamEntity extends BaseEntity {
 	/**
 	* 考试开始时间
 	*/
-	private Date startTime;
+	private Date startDate;
 
 	/**
 	* 考试结束时间
 	*/
-	private Date endTime;
+	private Date endDate;
 
 	/**
-	* 考试年级
-	*/
-	private Long clazzId;
+	 * 考试课程
+	 */
+	private String courseList;
 
 	/**
 	* 备注

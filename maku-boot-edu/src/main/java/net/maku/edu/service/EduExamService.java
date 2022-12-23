@@ -18,7 +18,7 @@ public interface EduExamService extends BaseService<EduExamEntity> {
 
     PageResult<EduExamVO> page(EduExamQuery query);
 
-    void save(EduExamVO vo);
+    Long save(EduExamVO vo);
 
     void update(EduExamVO vo);
 

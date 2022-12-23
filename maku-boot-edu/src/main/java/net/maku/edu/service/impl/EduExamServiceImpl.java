@@ -27,11 +27,13 @@ import java.util.List;
 @AllArgsConstructor
 public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntity> implements EduExamService {
 
+    private final EduExamConvert eduExamConvert;
+
     @Override
     public PageResult<EduExamVO> page(EduExamQuery query) {
         IPage<EduExamEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(EduExamConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        return new PageResult<>(eduExamConvert.convertList(page.getRecords()), page.getTotal());
     }
 
     private LambdaQueryWrapper<EduExamEntity> getWrapper(EduExamQuery query){
@@ -41,15 +43,15 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
     }
 
     @Override
-    public void save(EduExamVO vo) {
-        EduExamEntity entity = EduExamConvert.INSTANCE.convert(vo);
-
+    public Long save(EduExamVO vo) {
+        EduExamEntity entity = eduExamConvert.convert(vo);
         baseMapper.insert(entity);
+        return entity.getId();
     }
 
     @Override
     public void update(EduExamVO vo) {
-        EduExamEntity entity = EduExamConvert.INSTANCE.convert(vo);
+        EduExamEntity entity = eduExamConvert.convert(vo);
 
         updateById(entity);
     }

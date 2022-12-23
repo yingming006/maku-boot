@@ -31,10 +31,6 @@ import java.util.List;
 @AllArgsConstructor
 public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEntity> implements EduClazzService {
 
-    private final EduGradeService eduGradeService;
-    private final EduSemesterService eduSemesterService;
-    private final EduTeacherService eduTeacherService;
-
     @Override
     public PageResult<EduClazzVO> page(EduClazzQuery query) {
         IPage<EduClazzEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));

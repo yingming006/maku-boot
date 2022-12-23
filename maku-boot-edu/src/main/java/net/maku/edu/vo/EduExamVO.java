@@ -6,6 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 import net.maku.framework.common.utils.DateUtils;
 import java.util.Date;
+import java.util.List;
 
 /**
 * 考试信息表
@@ -28,15 +29,18 @@ public class EduExamVO implements Serializable {
 	private String type;
 
 	@Schema(description = "考试开始时间")
-	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
-	private Date startTime;
+	@JsonFormat(pattern = DateUtils.DATE_PATTERN)
+	private Date startDate;
 
 	@Schema(description = "考试结束时间")
-	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
-	private Date endTime;
+	@JsonFormat(pattern = DateUtils.DATE_PATTERN)
+	private Date endDate;
 
 	@Schema(description = "考试年级")
-	private Long clazzId;
+	private List<String> clazzList;
+
+	@Schema(description = "考试课程")
+	private String courseList;
 
 	@Schema(description = "备注")
 	private String remark;
