@@ -36,8 +36,7 @@
         LEFT JOIN edu_course cou ON es.course_id = cou.id
         <where>
             <if test="query.examId != null">
-                es.exam_id = #{query.examId}
-            AND ec.exam_id = #{query.examId}
+                ec.exam_id = #{query.examId}
             </if>
             <if test="query.clazzId != null">
                 AND stu.clazz_id = #{query.clazzId}
@@ -55,8 +54,7 @@
         LEFT JOIN edu_exam_score es ON es.student_id = stu.id
         <where>
             <if test="query.examId != null">
-                es.exam_id = #{query.examId}
-            AND ec.exam_id = #{query.examId}
+                ec.exam_id = #{query.examId}
             </if>
             <if test="query.clazzId != null">
                 AND stu.clazz_id = #{query.clazzId}

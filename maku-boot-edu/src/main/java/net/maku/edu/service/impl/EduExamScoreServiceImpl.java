@@ -40,7 +40,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
             EduExamScoreVO vo = stuList.get(i);
             Long stuId = vo.getStudentId();
             LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>();
-            while (scoreMap.isEmpty() || (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId))) {
+            while (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId) && null != stuList.get(i).getScore()) {
                 String courseName = "course_" + stuList.get(i).getCourseId();
                 BigDecimal score = stuList.get(i).getScore();
                 scoreMap.put(courseName, score);
@@ -48,6 +48,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
             }
             vo.setScoreList(scoreMap);
             result.add(vo);
+            if (scoreMap.isEmpty()) i++;
         }
         return new PageResult<>(result, result.size());
     }
