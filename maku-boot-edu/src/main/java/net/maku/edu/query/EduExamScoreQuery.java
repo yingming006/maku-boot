@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.maku.framework.common.query.Query;
 
+import javax.validation.constraints.NotNull;
+
 /**
 * 考试成绩表查询
 *
@@ -15,4 +17,14 @@ import net.maku.framework.common.query.Query;
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "考试成绩表查询")
 public class EduExamScoreQuery extends Query {
+
+    @Schema(description = "考试id")
+    @NotNull(message = "考试id不能为空")
+    private Long examId;
+
+    @Schema(description = "班级id")
+    private Long clazzId;
+
+    @Schema(description = "学生id")
+    private Long studentId;
 }

@@ -29,24 +29,9 @@ public class EduExamScoreEntity extends BaseEntity {
 	private Long studentId;
 
 	/**
-	* 学生学号
-	*/
-	private String studentNo;
-
-	/**
-	* 学生姓名
-	*/
-	private String studentName;
-
-	/**
 	* 课程id
 	*/
 	private Long courseId;
-
-	/**
-	* 课程名称
-	*/
-	private String courseName;
 
 	/**
 	* 成绩

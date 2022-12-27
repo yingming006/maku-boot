@@ -29,4 +29,7 @@ public class Query {
 
     @Schema(description = "是否升序")
     boolean asc;
+
+    @Schema(description = "是否进行 count 查询")
+    boolean searchCount;
 }

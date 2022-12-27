@@ -7,6 +7,8 @@ import java.io.Serializable;
 import net.maku.framework.common.utils.DateUtils;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
 * 考试成绩表
@@ -33,6 +35,9 @@ public class EduExamScoreVO implements Serializable {
 
 	@Schema(description = "学生姓名")
 	private String studentName;
+
+	@Schema(description = "班级id")
+	private String clazzId;
 
 	@Schema(description = "课程id")
 	private Long courseId;
@@ -66,5 +71,6 @@ public class EduExamScoreVO implements Serializable {
 	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
 	private Date updateTime;
 
-
+	@Schema(description = "成绩")
+	private LinkedHashMap<String, BigDecimal> scoreList;
 }

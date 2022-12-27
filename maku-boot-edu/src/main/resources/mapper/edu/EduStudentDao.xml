@@ -25,9 +25,7 @@
 
     <select id="selectListPage" resultType="net.maku.edu.vo.EduStudentVO">
         select
-        <include refid="stuColumns">
-            <property name="stu" value="stu"/>
-        </include>
+        <include refid="stuColumns"/>
         , cla.grade_id
         from edu_student stu
         left join edu_clazz cla on stu.clazz_id = cla.id

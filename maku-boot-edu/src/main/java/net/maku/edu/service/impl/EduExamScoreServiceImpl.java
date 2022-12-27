@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
+import net.maku.edu.service.EduStudentService;
+import net.maku.edu.vo.EduStudentVO;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.impl.BaseServiceImpl;
 import net.maku.edu.convert.EduExamScoreConvert;
@@ -15,7 +17,11 @@ import net.maku.edu.service.EduExamScoreService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 考试成绩表
@@ -29,14 +35,28 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
 
     @Override
     public PageResult<EduExamScoreVO> page(EduExamScoreQuery query) {
-        IPage<EduExamScoreEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(EduExamScoreConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        List<EduExamScoreVO> stuList = baseMapper.selectList(getWrapper(query), query);
+
+        List<EduExamScoreVO> result = new ArrayList<>();
+        for (int i = 0; i < stuList.size();) {
+            EduExamScoreVO vo = stuList.get(i);
+            Long stuId = vo.getStudentId();
+            LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>();
+            while (scoreMap.isEmpty() || (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId))) {
+                String courseName = "course_" + stuList.get(i).getCourseId();
+                BigDecimal score = stuList.get(i).getScore();
+                scoreMap.put(courseName, score);
+                i++;
+            }
+            vo.setScoreList(scoreMap);
+            result.add(vo);
+        }
+        return new PageResult<>(result, result.size());
     }
 
-    private LambdaQueryWrapper<EduExamScoreEntity> getWrapper(EduExamScoreQuery query){
+    private LambdaQueryWrapper<EduExamScoreEntity> getWrapper(EduExamScoreQuery query) {
         LambdaQueryWrapper<EduExamScoreEntity> wrapper = Wrappers.lambdaQuery();
-
         return wrapper;
     }
 

@@ -7,10 +7,7 @@
         <result property="id" column="id"/>
         <result property="examId" column="exam_id"/>
         <result property="studentId" column="student_id"/>
-        <result property="studentNo" column="student_no"/>
-        <result property="studentName" column="student_name"/>
         <result property="courseId" column="course_id"/>
-        <result property="courseName" column="course_name"/>
         <result property="score" column="score"/>
         <result property="isEnabled" column="is_enabled"/>
         <result property="deleted" column="deleted"/>
@@ -21,4 +18,64 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <sql id="examScoreColumns">
+        es.id,es.exam_id,es.student_id,es.course_id,es.score,es.is_enabled
+        ,es.deleted,es.version,es.creator,es.create_time,es.updater,es.update_time
+    </sql>
+
+    <select id="selectListPage" resultType="net.maku.edu.vo.EduExamScoreVO">
+        SELECT
+        <include refid="examScoreColumns"/>
+        , stu.no AS student_no, stu.name AS student_name, stu.clazz_id, cou.name AS course_name
+        FROM edu_exam_score es
+        LEFT JOIN
+        (
+        SELECT stu.id, stu.no, stu.name, stu.clazz_id FROM edu_student stu LEFT JOIN edu_clazz clz ON stu.clazz_id
+        =clz.id
+        ) stu ON es.student_id = stu.id
+        LEFT JOIN edu_course cou ON es.course_id = cou.id
+        <where>
+            <if test="query.examId != null">
+                es.exam_id = #{query.examId}
+            </if>
+            <if test="query.clazzId != null">
+                AND stu.clazz_id = #{query.clazzId}
+            </if>
+        </where>
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectList" resultType="net.maku.edu.vo.EduExamScoreVO">
+        SELECT
+        <include refid="examScoreColumns"/>
+        , stu.no AS student_no, stu.name AS student_name, stu.clazz_id
+        FROM edu_student stu
+        LEFT JOIN edu_exam_clazz ec ON stu.clazz_id = ec.clazz_id
+        LEFT JOIN edu_exam_score es ON es.student_id = stu.id
+        <where>
+            <if test="query.examId != null">
+                es.exam_id = #{query.examId}
+            </if>
+            <if test="query.clazzId != null">
+                AND stu.clazz_id = #{query.clazzId}
+            </if>
+        </where>
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectListCount" resultType="java.lang.Long">
+        SELECT COUNT(1) as total
+        FROM edu_student stu
+        LEFT JOIN edu_exam_clazz ec ON stu.clazz_id = ec.clazz_id
+        LEFT JOIN edu_exam_score es ON es.student_id = stu.id
+        <where>
+            <if test="query.examId != null">
+                es.exam_id = #{query.examId}
+            </if>
+            <if test="query.clazzId != null">
+                AND stu.clazz_id = #{query.clazzId}
+            </if>
+        </where>
+        ${ew.customSqlSegment}
+    </select>
 </mapper>
