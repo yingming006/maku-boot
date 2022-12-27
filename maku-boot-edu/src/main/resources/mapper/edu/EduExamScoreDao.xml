@@ -37,6 +37,7 @@
         <where>
             <if test="query.examId != null">
                 es.exam_id = #{query.examId}
+            AND ec.exam_id = #{query.examId}
             </if>
             <if test="query.clazzId != null">
                 AND stu.clazz_id = #{query.clazzId}
@@ -55,6 +56,7 @@
         <where>
             <if test="query.examId != null">
                 es.exam_id = #{query.examId}
+            AND ec.exam_id = #{query.examId}
             </if>
             <if test="query.clazzId != null">
                 AND stu.clazz_id = #{query.clazzId}

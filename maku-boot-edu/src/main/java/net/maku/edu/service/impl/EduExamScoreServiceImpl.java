@@ -1,19 +1,16 @@
 package net.maku.edu.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.AllArgsConstructor;
-import net.maku.edu.service.EduStudentService;
-import net.maku.edu.vo.EduStudentVO;
-import net.maku.framework.common.page.PageResult;
-import net.maku.framework.common.service.impl.BaseServiceImpl;
 import net.maku.edu.convert.EduExamScoreConvert;
+import net.maku.edu.dao.EduExamScoreDao;
 import net.maku.edu.entity.EduExamScoreEntity;
 import net.maku.edu.query.EduExamScoreQuery;
-import net.maku.edu.vo.EduExamScoreVO;
-import net.maku.edu.dao.EduExamScoreDao;
 import net.maku.edu.service.EduExamScoreService;
+import net.maku.edu.vo.EduExamScoreVO;
+import net.maku.framework.common.page.PageResult;
+import net.maku.framework.common.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

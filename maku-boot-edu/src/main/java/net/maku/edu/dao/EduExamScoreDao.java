@@ -1,17 +1,14 @@
 package net.maku.edu.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import net.maku.edu.entity.EduExamScoreEntity;
 import net.maku.edu.query.EduExamScoreQuery;
 import net.maku.edu.vo.EduExamScoreVO;
-import net.maku.edu.vo.EduStudentVO;
 import net.maku.framework.common.dao.BaseDao;
-import net.maku.edu.entity.EduExamScoreEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
