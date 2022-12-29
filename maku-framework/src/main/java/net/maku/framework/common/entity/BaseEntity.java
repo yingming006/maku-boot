@@ -54,6 +54,6 @@ public abstract class BaseEntity implements TransPojo {
      * 删除标记
      */
     @TableLogic
-    @TableField(fill = FieldFill.INSERT)
+    @TableField(fill = FieldFill.INSERT, select = false)
     private Integer deleted;
 }

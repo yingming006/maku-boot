@@ -53,7 +53,7 @@ public class ScheduleJobEntity implements Serializable {
 	private String cronExpression;
 
 	/**
-	* 状态 
+	* 状态
 	*/
 	private Integer status;
 
@@ -102,7 +102,7 @@ public class ScheduleJobEntity implements Serializable {
 	 * 删除标记
 	 */
 	@TableLogic
-	@TableField(fill = FieldFill.INSERT)
+	@TableField(fill = FieldFill.INSERT, select = false)
 	private Integer deleted;
 
 }

@@ -37,7 +37,7 @@ public class EduExamScoreVO implements Serializable {
 	private String studentName;
 
 	@Schema(description = "班级id")
-	private String clazzId;
+	private Long clazzId;
 
 	@Schema(description = "课程id")
 	private Long courseId;
@@ -71,6 +71,11 @@ public class EduExamScoreVO implements Serializable {
 	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
 	private Date updateTime;
 
-	@Schema(description = "成绩")
+	@Schema(description = "成绩/查询结果")
 	private LinkedHashMap<String, BigDecimal> scoreList;
+
+	@Schema(description = "成绩/修改用")
+	private List<EduExamScoreDetail> scoreDetailList;
 }
+
+

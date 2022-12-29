@@ -5,7 +5,6 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 /**
  * 查询公共参数
@@ -14,15 +13,13 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class Query {
-    @NotNull(message = "页码不能为空")
     @Min(value = 1, message = "页码最小值为 1")
     @Schema(description = "当前页码", required = true)
-    Integer page;
+    Integer page = 1;
 
-    @NotNull(message = "每页条数不能为空")
-    @Range(min = 1, max = 1000, message = "每页条数，取值范围 1-1000")
+    @Range(min = 1, max = Integer.MAX_VALUE, message = "每页条数超过最大范围")
     @Schema(description = "每页条数", required = true)
-    Integer limit;
+    Integer limit = 10;
 
     @Schema(description = "排序字段")
     String order;

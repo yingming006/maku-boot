@@ -23,4 +23,6 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
     void update(EduExamScoreVO vo);
 
     void delete(List<Long> idList);
+
+    EduExamScoreVO getByExamIdWithStuId(EduExamScoreQuery query);
 }

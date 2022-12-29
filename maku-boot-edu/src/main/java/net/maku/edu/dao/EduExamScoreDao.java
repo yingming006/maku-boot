@@ -25,5 +25,5 @@ public interface EduExamScoreDao extends BaseDao<EduExamScoreEntity> {
 
     Long selectListCount(@Param(Constants.WRAPPER) LambdaQueryWrapper<EduExamScoreEntity> wrapper, EduExamScoreQuery query);
 
-    List<EduExamScoreVO> selectList(@Param(Constants.WRAPPER) LambdaQueryWrapper<EduExamScoreEntity> wrapper, @Param("query") EduExamScoreQuery query);
+    List<EduExamScoreVO> selectAllList(@Param(Constants.WRAPPER) LambdaQueryWrapper<EduExamScoreEntity> wrapper, @Param("query") EduExamScoreQuery query);
 }

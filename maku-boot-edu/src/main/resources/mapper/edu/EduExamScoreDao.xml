@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="examScoreColumns">
-        es.id,es.exam_id,es.student_id,es.course_id,es.score,es.is_enabled
+        es.id,es.exam_id,es.course_id,es.score,es.is_enabled
         ,es.deleted,es.version,es.creator,es.create_time,es.updater,es.update_time
     </sql>
 
@@ -41,14 +41,15 @@
             <if test="query.clazzId != null">
                 AND stu.clazz_id = #{query.clazzId}
             </if>
+            AND (es.deleted = 0 OR es.deleted IS NULL)
         </where>
         ${ew.customSqlSegment}
     </select>
 
-    <select id="selectList" resultType="net.maku.edu.vo.EduExamScoreVO">
+    <select id="selectAllList" resultType="net.maku.edu.vo.EduExamScoreVO">
         SELECT
         <include refid="examScoreColumns"/>
-        , stu.no AS student_no, stu.name AS student_name, stu.clazz_id
+        , stu.id AS student_id, stu.no AS student_no, stu.name AS student_name, stu.clazz_id
         FROM edu_student stu
         LEFT JOIN edu_exam_clazz ec ON stu.clazz_id = ec.clazz_id
         LEFT JOIN edu_exam_score es ON es.student_id = stu.id
@@ -59,6 +60,10 @@
             <if test="query.clazzId != null">
                 AND stu.clazz_id = #{query.clazzId}
             </if>
+            <if test="query.studentId != null">
+                AND stu.id = #{query.studentId}
+            </if>
+            AND (es.deleted = 0 OR es.deleted IS NULL)
         </where>
         ${ew.customSqlSegment}
     </select>
@@ -75,6 +80,10 @@
             <if test="query.clazzId != null">
                 AND stu.clazz_id = #{query.clazzId}
             </if>
+            <if test="query.studentId != null">
+                AND stu.id = #{query.studentId}
+            </if>
+            AND (es.deleted = 0 OR es.deleted IS NULL)
         </where>
         ${ew.customSqlSegment}
     </select>

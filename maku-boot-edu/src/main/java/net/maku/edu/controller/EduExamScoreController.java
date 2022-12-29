@@ -3,13 +3,11 @@ package net.maku.edu.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import net.maku.edu.query.EduExamScoreQuery;
+import net.maku.edu.service.EduExamScoreService;
+import net.maku.edu.vo.EduExamScoreVO;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.utils.Result;
-import net.maku.edu.convert.EduExamScoreConvert;
-import net.maku.edu.entity.EduExamScoreEntity;
-import net.maku.edu.service.EduExamScoreService;
-import net.maku.edu.query.EduExamScoreQuery;
-import net.maku.edu.vo.EduExamScoreVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,13 +36,12 @@ public class EduExamScoreController {
         return Result.ok(page);
     }
 
-    @GetMapping("{id}")
-    @Operation(summary = "信息")
+    @GetMapping("{examId}/{studentId}")
+    @Operation(summary = "获取当前考试单个学生成绩")
     @PreAuthorize("hasAuthority('edu:score:info')")
-    public Result<EduExamScoreVO> get(@PathVariable("id") Long id){
-        EduExamScoreEntity entity = eduExamScoreService.getById(id);
-
-        return Result.ok(EduExamScoreConvert.INSTANCE.convert(entity));
+    public Result<EduExamScoreVO> get(@Valid EduExamScoreQuery query){
+        EduExamScoreVO entity = eduExamScoreService.getByExamIdWithStuId(query);
+        return Result.ok(entity);
     }
 
     @PostMapping
@@ -61,7 +58,6 @@ public class EduExamScoreController {
     @PreAuthorize("hasAuthority('edu:score:update')")
     public Result<String> update(@RequestBody @Valid EduExamScoreVO vo){
         eduExamScoreService.update(vo);
-
         return Result.ok();
     }
 
