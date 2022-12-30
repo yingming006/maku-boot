@@ -19,6 +19,11 @@ import java.math.BigDecimal;
 public class EduExamScoreEntity extends BaseEntity {
 
 	/**
+	 * 准考证号
+	 */
+	private Long examineeNo;
+
+	/**
 	* 考试id
 	*/
 	private Long examId;
