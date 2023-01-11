@@ -19,4 +19,7 @@ public interface SysDictDataDao extends BaseDao<SysDictDataEntity> {
 
     @Select("${sql}")
     List<SysDictVO.DictData> getListForSql(@Param("sql") String sql);
+
+    @Select("${sql}")
+    List<SysDictDataEntity> getListByDynamicSQL(@Param("sql") String sql);
 }

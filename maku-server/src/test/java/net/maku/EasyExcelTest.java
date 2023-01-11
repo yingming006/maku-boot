@@ -1,11 +1,15 @@
 package net.maku;
 
+import cn.hutool.extra.spring.SpringUtil;
+import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
+import net.maku.edu.listener.EduExamScoreListener;
 import net.maku.framework.common.excel.DateConverter;
 import net.maku.framework.common.excel.ExcelFinishCallBack;
 import net.maku.framework.common.utils.ExcelUtils;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.util.Arrays;
@@ -17,6 +21,7 @@ import java.util.List;
  *
  * @author eden
  */
+@SpringBootTest
 public class EasyExcelTest {
 
     @Test
@@ -38,7 +43,7 @@ public class EasyExcelTest {
 
     @Test
     public void doAImport() {
-        File file = new File("D://upload//test01.xlsx");
+        File file = new File("D://1.xlsx");
         ExcelClass excelClass = new ExcelClass();
         excelClass.setNumber(1);
         excelClass.setDecimals(1.2);
@@ -50,6 +55,19 @@ public class EasyExcelTest {
             ExcelUtils.readAnalysis(file, ExcelClass.class, new ServiceA());
         }
 
+    }
+
+    /**
+     * 不创建对象的读
+     */
+    @Test
+    public void noModelRead() {
+        String fileName = "D://1.xlsx";
+        // 这里 只要，然后读取第一个sheet 同步读取会自动finish
+
+        EduExamScoreListener listener = SpringUtil.getBean(EduExamScoreListener.class);
+        listener.setExamId(7L);
+        EasyExcel.read(fileName, listener).sheet().doRead();
     }
 
     @Data
@@ -77,4 +95,3 @@ class ServiceA implements ExcelFinishCallBack<EasyExcelTest.ExcelClass> {
         System.out.println(result.size());
     }
 }
-

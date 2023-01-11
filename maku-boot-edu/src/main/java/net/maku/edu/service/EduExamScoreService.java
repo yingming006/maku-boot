@@ -5,6 +5,7 @@ import net.maku.framework.common.service.BaseService;
 import net.maku.edu.vo.EduExamScoreVO;
 import net.maku.edu.query.EduExamScoreQuery;
 import net.maku.edu.entity.EduExamScoreEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
     void delete(List<Long> idList);
 
     EduExamScoreVO getByExamIdWithStuId(EduExamScoreQuery query);
+
+    void exportTemplate(EduExamScoreQuery query);
+
+    void importByExcel(MultipartFile file, EduExamScoreQuery query);
 }

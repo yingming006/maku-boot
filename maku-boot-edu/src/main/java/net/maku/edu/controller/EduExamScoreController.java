@@ -10,6 +10,7 @@ import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.utils.Result;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -68,5 +69,31 @@ public class EduExamScoreController {
         eduExamScoreService.delete(idList);
 
         return Result.ok();
+    }
+
+    @GetMapping("exportTemplate/{examId}")
+    @Operation(summary = "导出模板")
+    @PreAuthorize("hasAuthority('edu:score:export')")
+    public void exportTemplate(@Valid EduExamScoreQuery query) {
+        eduExamScoreService.exportTemplate(query);
+    }
+
+    @PostMapping("import")
+    @Operation(summary = "导入用户")
+    @PreAuthorize("hasAuthority('edu:score:import')")
+    public Result<String> importExcel(@RequestParam("file") MultipartFile file, @Valid EduExamScoreQuery query) {
+        if (file.isEmpty()) {
+            return Result.error("请选择需要上传的文件");
+        }
+        eduExamScoreService.importByExcel(file, query);
+
+        return Result.ok();
+    }
+
+    @GetMapping("export")
+    @Operation(summary = "导出用户")
+    @PreAuthorize("hasAuthority('edu:score:export')")
+    public void export() {
+//        sysUserService.export();
     }
 }

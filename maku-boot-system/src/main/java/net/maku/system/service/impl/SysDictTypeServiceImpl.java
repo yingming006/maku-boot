@@ -40,6 +40,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeDao, SysDictTypeEntity> implements SysDictTypeService, InitializingBean {
     private final SysDictDataDao sysDictDataDao;
+
+    private final SysDictTypeDao sysDictTypeDao;
     private final DictionaryTransService dictionaryTransService;
 
     @Override
@@ -137,10 +139,19 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeDao, SysD
         CompletableFuture.supplyAsync(() -> {
             // 获取所有的字典项数据
             List<SysDictDataEntity> dataList = sysDictDataDao.selectList(new LambdaQueryWrapper<>());
+            // 获取所有动态 sql 字典数据
+            List<SysDictTypeEntity> dictTypeEntities = super.list();
+            for (SysDictTypeEntity dictTypeEntity : dictTypeEntities) {
+                if (1 == dictTypeEntity.getDictSource()) {
+                    List<SysDictDataEntity> list = sysDictDataDao.getListByDynamicSQL(dictTypeEntity.getDictSql());
+                    list.forEach(data -> data.setDictTypeId(dictTypeEntity.getId()));
+                    dataList.addAll(list);
+                }
+            }
             // 根据类型分组
             Map<Long, List<SysDictDataEntity>> dictTypeDataMap = dataList.stream().collect(Collectors
                     .groupingBy(SysDictDataEntity::getDictTypeId));
-            List<SysDictTypeEntity> dictTypeEntities = super.list();
+
             for (SysDictTypeEntity dictTypeEntity : dictTypeEntities) {
                 if (dictTypeDataMap.containsKey(dictTypeEntity.getId())) {
                     dictionaryTransService.refreshCache(dictTypeEntity.getDictType(), dictTypeDataMap.get(dictTypeEntity.getId())

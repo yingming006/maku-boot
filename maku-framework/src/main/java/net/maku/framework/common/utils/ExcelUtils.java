@@ -20,9 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +62,7 @@ public class ExcelUtils {
      */
     public static <T> void readAnalysis(File file, Class<T> head, ExcelFinishCallBack<T> callBack) {
         try {
-            EasyExcel.read(new FileInputStream(file), head, new ExcelDataListener<>(callBack)).sheet().doRead();
+            EasyExcel.read(Files.newInputStream(file.toPath()), head, new ExcelDataListener<>(callBack)).sheet().doRead();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,6 +143,29 @@ public class ExcelUtils {
             String fileName = URLUtil.encode(excelName).replaceAll("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
             EasyExcel.write(response.getOutputStream(), head).sheet(StringUtils.isBlank(sheetName) ? "sheet1" : sheetName).doWrite(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 导出数据到web，不创建对象的写
+     * 文件下载（失败了会返回一个有部分数据的Excel）
+     *
+     * @param head      标题
+     * @param excelName excel名字
+     * @param sheetName sheet名称
+     * @param data      数据
+     */
+    public static <T> void excelExportNoModel(List<List<String>> head, String excelName, String sheetName, List<T> data) {
+        try {
+            HttpServletResponse response = HttpContextUtils.getHttpServletResponse();
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easy excel没有关系
+            String fileName = URLUtil.encode(excelName).replaceAll("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            EasyExcel.write(response.getOutputStream()).head(head).sheet(StringUtils.isBlank(sheetName) ? "sheet1" : sheetName).doWrite(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

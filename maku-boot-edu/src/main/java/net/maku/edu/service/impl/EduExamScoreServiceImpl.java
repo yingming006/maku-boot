@@ -1,24 +1,33 @@
 package net.maku.edu.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.util.ListUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fhs.trans.service.impl.DictionaryTransService;
 import lombok.AllArgsConstructor;
 import net.maku.edu.convert.EduExamScoreConvert;
 import net.maku.edu.dao.EduExamScoreDao;
 import net.maku.edu.entity.EduExamEntity;
 import net.maku.edu.entity.EduExamScoreEntity;
+import net.maku.edu.listener.EduExamScoreListener;
 import net.maku.edu.query.EduExamScoreQuery;
 import net.maku.edu.service.EduExamScoreService;
 import net.maku.edu.service.EduExamService;
 import net.maku.edu.vo.EduExamScoreDetail;
 import net.maku.edu.vo.EduExamScoreVO;
+import net.maku.framework.common.exception.ServerException;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.impl.BaseServiceImpl;
+import net.maku.framework.common.utils.ExcelUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -37,6 +46,8 @@ import java.util.stream.Collectors;
 public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, EduExamScoreEntity> implements EduExamScoreService {
 
     private final EduExamService eduExamService;
+
+    private final DictionaryTransService dictionaryTransService;
 
     @Override
     public PageResult<EduExamScoreVO> page(EduExamScoreQuery query) {
@@ -155,6 +166,43 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         result.setExamId(query.getExamId());
 
         return result;
+    }
+
+    @Override
+    public void exportTemplate(EduExamScoreQuery query) {
+        EduExamEntity exam = eduExamService.getById(query.getExamId());
+        ExcelUtils.excelExportNoModel(head(exam), exam.getName(), "sheet1", null);
+    }
+
+    @Override
+    public void importByExcel(MultipartFile file, EduExamScoreQuery query) {
+
+        EduExamScoreListener listener = SpringUtil.getBean(EduExamScoreListener.class);
+        listener.setExamId(query.getExamId());
+        try {
+            EasyExcel.read(file.getInputStream(), listener).sheet().doRead();
+        } catch (IOException e) {
+            throw new ServerException("导入失败" + e.getMessage());
+        }
+    }
+
+    private List<List<String>> head(EduExamEntity entity) {
+        List<List<String>> list = ListUtils.newArrayList();
+        List<String> head0 = ListUtils.newArrayList();
+        head0.add("学生学号");
+        List<String> head1 = ListUtils.newArrayList();
+        head1.add("学生姓名");
+        list.add(head0);
+        list.add(head1);
+
+        String[] scoreList = entity.getCourseList().split(",");
+        for (String s : scoreList) {
+            String courseName = dictionaryTransService.getDictionaryTransMap().get("course_dict_" + s);
+            List<String> head = ListUtils.newArrayList(courseName);
+            list.add(head);
+        }
+
+        return list;
     }
 
 }
