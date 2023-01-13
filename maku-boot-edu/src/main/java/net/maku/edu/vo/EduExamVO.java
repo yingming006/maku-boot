@@ -40,7 +40,7 @@ public class EduExamVO implements Serializable {
 	private List<String> clazzList;
 
 	@Schema(description = "考试课程")
-	private String courseList;
+	private List<String> courseList;
 
 	@Schema(description = "备注")
 	private String remark;

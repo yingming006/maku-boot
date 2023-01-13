@@ -2,9 +2,11 @@ package net.maku.edu.convert.impl;
 
 import net.maku.edu.convert.EduExamConvert;
 import net.maku.edu.entity.EduExamClazzEntity;
+import net.maku.edu.entity.EduExamCourseEntity;
 import net.maku.edu.entity.EduExamEntity;
 import net.maku.edu.query.EduExamQuery;
 import net.maku.edu.service.EduExamClazzService;
+import net.maku.edu.service.EduExamCourseService;
 import net.maku.edu.vo.EduExamVO;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +19,11 @@ public class EduExamConvertImpl implements EduExamConvert {
 
     private final EduExamClazzService eduExamClazzService;
 
-    public EduExamConvertImpl(EduExamClazzService eduExamClazzService) {
+    private final EduExamCourseService eduExamCourseService;
+
+    public EduExamConvertImpl(EduExamClazzService eduExamClazzService, EduExamCourseService eduExamCourseService) {
         this.eduExamClazzService = eduExamClazzService;
+        this.eduExamCourseService = eduExamCourseService;
     }
 
     @Override
@@ -42,7 +47,6 @@ public class EduExamConvertImpl implements EduExamConvert {
         eduExamEntity.setEndDate(vo.getEndDate());
         eduExamEntity.setRemark(vo.getRemark());
         eduExamEntity.setIsEnabled(vo.getIsEnabled());
-        eduExamEntity.setCourseList(vo.getCourseList());
 
         return eduExamEntity;
     }
@@ -68,18 +72,25 @@ public class EduExamConvertImpl implements EduExamConvert {
         eduExamVO.setCreateTime(entity.getCreateTime());
         eduExamVO.setUpdater(entity.getUpdater());
         eduExamVO.setUpdateTime(entity.getUpdateTime());
-        eduExamVO.setCourseList(entity.getCourseList());
 
         EduExamQuery query = new EduExamQuery();
         query.setId(entity.getId());
-        List<EduExamClazzEntity> list = eduExamClazzService.list(query);
+        List<EduExamClazzEntity> clazzEntities = eduExamClazzService.list(query);
+        List<EduExamCourseEntity> courseEntities = eduExamCourseService.list(query);
 
         List<String> clazzList = new ArrayList<>();
-        for (EduExamClazzEntity eduExamClazzEntity : list) {
+        for (EduExamClazzEntity eduExamClazzEntity : clazzEntities) {
             clazzList.add(String.valueOf(eduExamClazzEntity.getClazzId()));
         }
 
+        List<String> courseList = new ArrayList<>();
+
+        for (EduExamCourseEntity courseEntity : courseEntities) {
+            courseList.add(String.valueOf(courseEntity.getCourseId()));
+        }
+
         eduExamVO.setClazzList(clazzList);
+        eduExamVO.setCourseList(courseList);
         return eduExamVO;
     }
 

@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fhs.trans.service.impl.DictionaryTransService;
 import lombok.AllArgsConstructor;
+import net.maku.edu.convert.EduExamConvert;
 import net.maku.edu.convert.EduExamScoreConvert;
+import net.maku.edu.convert.EduTeacherConvert;
 import net.maku.edu.dao.EduExamScoreDao;
 import net.maku.edu.entity.EduExamEntity;
 import net.maku.edu.entity.EduExamScoreEntity;
@@ -19,6 +21,7 @@ import net.maku.edu.service.EduExamScoreService;
 import net.maku.edu.service.EduExamService;
 import net.maku.edu.vo.EduExamScoreDetail;
 import net.maku.edu.vo.EduExamScoreVO;
+import net.maku.edu.vo.EduExamVO;
 import net.maku.framework.common.exception.ServerException;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.impl.BaseServiceImpl;
@@ -49,6 +52,8 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
 
     private final DictionaryTransService dictionaryTransService;
 
+    private final EduExamConvert eduExamConvert;
+
     @Override
     public PageResult<EduExamScoreVO> page(EduExamScoreQuery query) {
 
@@ -56,10 +61,11 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         List<EduExamScoreVO> stuList = baseMapper.selectAllList(getWrapper(query), query);
 
         // 初始化成绩，默认为0
-        EduExamEntity examVO = eduExamService.getById(query.getExamId());
+        EduExamEntity entity = eduExamService.getById(query.getExamId());
+        EduExamVO examVO = eduExamConvert.convert(entity);
+        List<String> courseList = examVO.getCourseList();
         LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
-        String[] scoreList = examVO.getCourseList().split(",");
-        for (String s : scoreList) {
+        for (String s : courseList) {
             scoreZeroMap.put("course_" + s, BigDecimal.ZERO);
         }
 
@@ -142,13 +148,13 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         List<EduExamScoreVO> stuList = baseMapper.selectAllList(Wrappers.lambdaQuery(), query);
 
         // 初始化成绩，默认为0
-        EduExamEntity examVO = eduExamService.getById(query.getExamId());
+        EduExamEntity entity = eduExamService.getById(query.getExamId());
+        EduExamVO examVO = eduExamConvert.convert(entity);
+        List<String> courseList = examVO.getCourseList();
         LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
-        String[] scoreList = examVO.getCourseList().split(",");
-        for (String s : scoreList) {
+        for (String s : courseList) {
             scoreZeroMap.put("course_" + s, BigDecimal.ZERO);
         }
-
 
         LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
         for (EduExamScoreVO vo : stuList) {
@@ -195,8 +201,9 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         list.add(head0);
         list.add(head1);
 
-        String[] scoreList = entity.getCourseList().split(",");
-        for (String s : scoreList) {
+        EduExamVO examVO = eduExamConvert.convert(entity);
+        List<String> courseList = examVO.getCourseList();
+        for (String s : courseList) {
             String courseName = dictionaryTransService.getDictionaryTransMap().get("course_dict_" + s);
             List<String> head = ListUtils.newArrayList(courseName);
             list.add(head);

@@ -1,5 +1,7 @@
 package net.maku.edu.service;
 
+import net.maku.edu.entity.EduExamClazzEntity;
+import net.maku.edu.query.EduExamQuery;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.BaseService;
 import net.maku.edu.vo.EduExamCourseVO;
@@ -16,7 +18,7 @@ import java.util.List;
  */
 public interface EduExamCourseService extends BaseService<EduExamCourseEntity> {
 
-    PageResult<EduExamCourseVO> page(EduExamCourseQuery query);
+    List<EduExamCourseEntity> list(EduExamQuery query);
 
     void save(EduExamCourseVO vo);
 

@@ -40,11 +40,6 @@ public class EduExamEntity extends BaseEntity {
 	private Date endDate;
 
 	/**
-	 * 考试课程
-	 */
-	private String courseList;
-
-	/**
 	* 备注
 	*/
 	private String remark;
