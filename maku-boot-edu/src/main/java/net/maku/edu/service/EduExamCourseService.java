@@ -1,12 +1,9 @@
 package net.maku.edu.service;
 
-import net.maku.edu.entity.EduExamClazzEntity;
-import net.maku.edu.query.EduExamQuery;
-import net.maku.framework.common.page.PageResult;
-import net.maku.framework.common.service.BaseService;
-import net.maku.edu.vo.EduExamCourseVO;
-import net.maku.edu.query.EduExamCourseQuery;
 import net.maku.edu.entity.EduExamCourseEntity;
+import net.maku.edu.query.EduExamQuery;
+import net.maku.edu.vo.EduExamCourseVO;
+import net.maku.framework.common.service.BaseService;
 
 import java.util.List;
 
@@ -18,6 +15,11 @@ import java.util.List;
  */
 public interface EduExamCourseService extends BaseService<EduExamCourseEntity> {
 
+    /**
+     * 查询考试科目列表
+     * @param query
+     * @return
+     */
     List<EduExamCourseEntity> list(EduExamQuery query);
 
     void save(EduExamCourseVO vo);
