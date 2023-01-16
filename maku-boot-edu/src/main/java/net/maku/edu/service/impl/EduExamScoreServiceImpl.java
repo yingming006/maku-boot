@@ -11,7 +11,6 @@ import com.fhs.trans.service.impl.DictionaryTransService;
 import lombok.AllArgsConstructor;
 import net.maku.edu.convert.EduExamConvert;
 import net.maku.edu.convert.EduExamScoreConvert;
-import net.maku.edu.convert.EduTeacherConvert;
 import net.maku.edu.dao.EduExamScoreDao;
 import net.maku.edu.entity.EduExamEntity;
 import net.maku.edu.entity.EduExamScoreEntity;
@@ -22,6 +21,7 @@ import net.maku.edu.service.EduExamService;
 import net.maku.edu.vo.EduExamScoreDetail;
 import net.maku.edu.vo.EduExamScoreVO;
 import net.maku.edu.vo.EduExamVO;
+import net.maku.framework.common.constant.Constant;
 import net.maku.framework.common.exception.ServerException;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.impl.BaseServiceImpl;
@@ -51,6 +51,8 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
 
     private final EduExamConvert eduExamConvert;
 
+    private final String COURSE_PREFIX = "course_";
+
     @Override
     public PageResult<EduExamScoreVO> page(EduExamScoreQuery query) {
 
@@ -63,7 +65,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         List<String> courseList = examVO.getCourseList();
         LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
         for (String s : courseList) {
-            scoreZeroMap.put("course_" + s, BigDecimal.ZERO);
+            scoreZeroMap.put(COURSE_PREFIX + s, BigDecimal.ZERO);
         }
 
         // 为每位学生成绩赋值
@@ -74,7 +76,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
             boolean isZero = true;
             LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
             while (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId) && null != stuList.get(i).getScore()) {
-                String courseName = "course_" + stuList.get(i).getCourseId();
+                String courseName = COURSE_PREFIX + stuList.get(i).getCourseId();
                 BigDecimal score = stuList.get(i).getScore();
                 scoreMap.put(courseName, score);
                 i++;
@@ -92,8 +94,8 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
     private LambdaQueryWrapper<EduExamScoreEntity> getWrapper(EduExamScoreQuery query) {
         LambdaQueryWrapper<EduExamScoreEntity> wrapper = Wrappers.lambdaQuery();
         // 默认学号升序
-        if (StrUtil.isBlank(query.getOrder()) || StrUtil.equals(query.getOrder(), "student_no")) {
-            query.setOrder("student_no");
+        if (StrUtil.isBlank(query.getOrder()) || StrUtil.equals(query.getOrder(), Constant.STUDENT_NO)) {
+            query.setOrder(Constant.STUDENT_NO);
             query.setAsc(true);
         }
         return wrapper;
@@ -149,7 +151,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         List<String> courseList = examVO.getCourseList();
         LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
         for (String s : courseList) {
-            scoreZeroMap.put("course_" + s, BigDecimal.ZERO);
+            scoreZeroMap.put(COURSE_PREFIX + s, BigDecimal.ZERO);
         }
 
         LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
@@ -158,7 +160,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
                 continue;
             }
 
-            String courseName = "course_" + vo.getCourseId();
+            String courseName = COURSE_PREFIX + vo.getCourseId();
             BigDecimal score = vo.getScore();
             scoreMap.put(courseName, score);
         }
@@ -173,8 +175,13 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
     @Override
     public void exportTemplate(EduExamScoreQuery query) {
         EduExamEntity exam = eduExamService.getById(query.getExamId());
-        // todo 导出某个班级
-        ExcelUtils.excelExportNoModel(head(exam), exam.getName(), "sheet1", null);
+        if (query.getClazzId() != null) {
+            // 附带班级学生
+            ExcelUtils.excelExportNoModel(head(exam), exam.getName(), Constant.SHEET_DEFAULT, examScoreDataList(query));
+        } else {
+            ExcelUtils.excelExportNoModel(head(exam), exam.getName(), Constant.SHEET_DEFAULT, null);
+        }
+
     }
 
     @Override
@@ -201,7 +208,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         List<String> courseList = examVO.getCourseList();
         LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
         for (String s : courseList) {
-            scoreZeroMap.put("course_" + s, null);
+            scoreZeroMap.put(COURSE_PREFIX + s, null);
         }
 
         // 先对结果去重，然后为每位学生赋值，排序
@@ -231,7 +238,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         EduExamVO examVO = eduExamConvert.convert(entity);
         List<String> courseList = examVO.getCourseList();
         for (String s : courseList) {
-            String courseName = dictionaryTransService.getDictionaryTransMap().get("course_dict_" + s);
+            String courseName = dictionaryTransService.getDictionaryTransMap().get(Constant.COURSE_DICT_PREFIX + s);
             List<String> head = ListUtils.newArrayList(courseName);
             list.add(head);
         }
@@ -239,4 +246,20 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         return list;
     }
 
+    /**
+     * 获取考试班级学生列表
+     * @param query
+     * @return
+     */
+    private List<List<Object>> examScoreDataList(EduExamScoreQuery query) {
+        List<List<Object>> list = ListUtils.newArrayList();
+        List<EduExamScoreVO> result = pageWithoutScore(query).getList();
+        for (EduExamScoreVO eduExamScoreVO : result) {
+            List<Object> data = ListUtils.newArrayList();
+            data.add(eduExamScoreVO.getStudentNo());
+            data.add(eduExamScoreVO.getStudentName());
+            list.add(data);
+        }
+        return list;
+    }
 }

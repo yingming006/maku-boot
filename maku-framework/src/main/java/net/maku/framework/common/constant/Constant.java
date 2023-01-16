@@ -43,4 +43,15 @@ public interface Constant {
      */
     String OK = "OK";
 
+    String SHEET_DEFAULT = "sheet1";
+
+    /**
+     * 学号
+     */
+    String STUDENT_NO = "student_no";
+
+    /**
+     * 课程字典前缀
+     */
+    String COURSE_DICT_PREFIX = "course_dict_";
 }

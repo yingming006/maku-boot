@@ -71,7 +71,7 @@ public class EduExamScoreController {
         return Result.ok();
     }
 
-    @GetMapping("exportTemplate/{examId}")
+    @GetMapping("exportTemplate")
     @Operation(summary = "导出模板")
     @PreAuthorize("hasAuthority('edu:score:export')")
     public void exportTemplate(@Valid EduExamScoreQuery query) {

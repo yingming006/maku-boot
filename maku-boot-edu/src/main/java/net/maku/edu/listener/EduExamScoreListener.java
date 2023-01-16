@@ -11,6 +11,7 @@ import net.maku.edu.entity.EduExamScoreEntity;
 import net.maku.edu.entity.EduStudentEntity;
 import net.maku.edu.service.EduExamScoreService;
 import net.maku.edu.service.EduStudentService;
+import net.maku.framework.common.constant.Constant;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -74,7 +75,7 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
         DictionaryTransService dictionaryTransService = SpringUtil.getBean(DictionaryTransService.class);
         // 查询课程字典，翻译
         for (int i = 2; i < headMap.size(); i++) {
-            headMap.put(i, dictionaryTransService.getUnTransMap().get("course_dict_" + headMap.get(i)));
+            headMap.put(i, dictionaryTransService.getUnTransMap().get(Constant.COURSE_DICT_PREFIX + headMap.get(i)));
         }
     }
 
