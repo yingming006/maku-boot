@@ -117,6 +117,9 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<Long> idList) {
         removeByIds(idList);
+        // 删除考试班级表记录和考试科目表记录
+        eduExamClazzService.remove(new LambdaQueryWrapper<EduExamClazzEntity>().in(EduExamClazzEntity::getExamId, idList));
+        eduExamCourseService.remove(new LambdaQueryWrapper<EduExamCourseEntity>().in(EduExamCourseEntity::getExamId, idList));
     }
 
 }
