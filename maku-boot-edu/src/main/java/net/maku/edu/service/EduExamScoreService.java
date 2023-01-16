@@ -30,4 +30,6 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
     void exportTemplate(EduExamScoreQuery query);
 
     void importByExcel(MultipartFile file, EduExamScoreQuery query);
+
+    PageResult<EduExamScoreVO> pageWithoutScore(EduExamScoreQuery query);
 }

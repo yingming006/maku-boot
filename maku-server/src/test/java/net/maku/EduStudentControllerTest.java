@@ -41,7 +41,7 @@ public class EduStudentControllerTest {
         for (EduClazzEntity clazzEntity : clazzList) {
             for (int i = 0; i < 10; i++) {
                 EduStudentEntity entity = new EduStudentEntity();
-                entity.setNo(RandomUtil.randomNumbers(10));
+                entity.setNo(Long.valueOf(RandomUtil.randomNumbers(10)));
                 entity.setName(RandomUtils.randomChinese(RandomUtil.randomInt(2, 4)));
                 entity.setGender(String.valueOf(RandomUtil.randomInt(2)));
                 entity.setClazzId(clazzEntity.getId());

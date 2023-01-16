@@ -19,7 +19,7 @@ public class EduStudentEntity extends BaseEntity {
 	/**
 	* 学号
 	*/
-	private String no;
+	private Long no;
 
 	/**
 	* 姓名

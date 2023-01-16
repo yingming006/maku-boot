@@ -31,7 +31,7 @@ public class EduExamScoreVO implements Serializable {
 	private Long studentId;
 
 	@Schema(description = "学生学号")
-	private String studentNo;
+	private Long studentNo;
 
 	@Schema(description = "学生姓名")
 	private String studentName;

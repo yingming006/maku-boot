@@ -22,7 +22,7 @@ public class EduTeacherVO implements Serializable {
 	private Long id;
 
 	@Schema(description = "工号")
-	private String no;
+	private Long no;
 
 	@Schema(description = "姓名")
 	private String name;

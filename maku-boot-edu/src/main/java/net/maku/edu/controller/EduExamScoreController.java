@@ -79,7 +79,7 @@ public class EduExamScoreController {
     }
 
     @PostMapping("import")
-    @Operation(summary = "导入用户")
+    @Operation(summary = "导入成绩")
     @PreAuthorize("hasAuthority('edu:score:import')")
     public Result<String> importExcel(@RequestParam("file") MultipartFile file, @Valid EduExamScoreQuery query) {
         if (file.isEmpty()) {
@@ -90,10 +90,12 @@ public class EduExamScoreController {
         return Result.ok();
     }
 
-    @GetMapping("export")
-    @Operation(summary = "导出用户")
-    @PreAuthorize("hasAuthority('edu:score:export')")
-    public void export() {
-//        sysUserService.export();
+    @GetMapping("pageWithoutScore")
+    @Operation(summary = "分页，不带成绩，导出模板")
+    @PreAuthorize("hasAuthority('edu:score:page')")
+    public Result<PageResult<EduExamScoreVO>> pageWithoutScore(@Valid EduExamScoreQuery query){
+        PageResult<EduExamScoreVO> page = eduExamScoreService.pageWithoutScore(query);
+
+        return Result.ok(page);
     }
 }

@@ -32,10 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -96,9 +93,8 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         LambdaQueryWrapper<EduExamScoreEntity> wrapper = Wrappers.lambdaQuery();
         // 默认学号升序
         if (StrUtil.isBlank(query.getOrder()) || StrUtil.equals(query.getOrder(), "student_no")) {
-            query.setOrder(null);
-            String lastSql = "order by length(student_no) " + (query.isAsc() ? "asc" : "desc") + ", student_no " + (query.isAsc() ? "asc" : "desc");
-            wrapper.last(lastSql);
+            query.setOrder("student_no");
+            query.setAsc(true);
         }
         return wrapper;
     }
@@ -177,6 +173,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
     @Override
     public void exportTemplate(EduExamScoreQuery query) {
         EduExamEntity exam = eduExamService.getById(query.getExamId());
+        // todo 导出某个班级
         ExcelUtils.excelExportNoModel(head(exam), exam.getName(), "sheet1", null);
     }
 
@@ -192,6 +189,36 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         }
     }
 
+    @Override
+    public PageResult<EduExamScoreVO> pageWithoutScore(EduExamScoreQuery query) {
+
+        query.setSearchCount(false);
+        List<EduExamScoreVO> stuList = baseMapper.selectAllList(getWrapper(query), query);
+
+        // 每位学生成绩为空
+        EduExamEntity entity = eduExamService.getById(query.getExamId());
+        EduExamVO examVO = eduExamConvert.convert(entity);
+        List<String> courseList = examVO.getCourseList();
+        LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
+        for (String s : courseList) {
+            scoreZeroMap.put("course_" + s, null);
+        }
+
+        // 先对结果去重，然后为每位学生赋值，排序
+        Set<EduExamScoreVO> stuSet = new TreeSet<>(Comparator.comparing(EduExamScoreVO::getStudentId));
+        stuSet.addAll(stuList);
+        List<EduExamScoreVO> result = new ArrayList<>(stuSet);
+        result.forEach(stu->stu.setScoreList(scoreZeroMap));
+        result = result.stream().sorted(Comparator.comparingLong(EduExamScoreVO::getStudentNo)).collect(Collectors.toList());
+
+        return new PageResult<>(result, result.size());
+    }
+
+    /**
+     * excel 表头
+     * @param entity
+     * @return
+     */
     private List<List<String>> head(EduExamEntity entity) {
         List<List<String>> list = ListUtils.newArrayList();
         List<String> head0 = ListUtils.newArrayList();
