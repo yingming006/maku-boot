@@ -84,13 +84,17 @@ public class EduExamConvertImpl implements EduExamConvert {
         }
 
         List<String> courseList = new ArrayList<>();
+        List<String> courseFullScoreList = new ArrayList<>();
 
         for (EduExamCourseEntity courseEntity : courseEntities) {
             courseList.add(String.valueOf(courseEntity.getCourseId()));
+            courseFullScoreList.add(String.valueOf(courseEntity.getFullScore()));
         }
+
 
         eduExamVO.setClazzList(clazzList);
         eduExamVO.setCourseList(courseList);
+        eduExamVO.setCourseFullScoreList(courseFullScoreList);
         return eduExamVO;
     }
 

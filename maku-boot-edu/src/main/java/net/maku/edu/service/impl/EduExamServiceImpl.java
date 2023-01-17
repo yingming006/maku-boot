@@ -69,12 +69,14 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
      */
     private void saveEduExamCourse(EduExamVO vo) {
         List<String> courseList = vo.getCourseList();
-        if (!courseList.isEmpty()) {
+        List<String> courseFullScoreList = vo.getCourseFullScoreList();
+        if (!courseList.isEmpty() && !courseFullScoreList.isEmpty()) {
             List<EduExamCourseEntity> courseEntities = new ArrayList<>();
-            for (String courseId : courseList) {
+            for (int i = 0; i < courseList.size(); i++) {
                 EduExamCourseEntity courseEntity = new EduExamCourseEntity();
                 courseEntity.setExamId(vo.getId());
-                courseEntity.setCourseId(Long.valueOf(courseId));
+                courseEntity.setCourseId(Long.valueOf(courseList.get(i)));
+                courseEntity.setFullScore(Integer.valueOf(courseFullScoreList.get(i)));
                 courseEntities.add(courseEntity);
             }
             eduExamCourseService.saveBatch(courseEntities);

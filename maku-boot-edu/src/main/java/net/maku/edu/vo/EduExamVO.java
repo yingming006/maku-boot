@@ -42,6 +42,9 @@ public class EduExamVO implements Serializable {
 	@Schema(description = "考试课程")
 	private List<String> courseList;
 
+	@Schema(description = "考试课程满分")
+	private List<String> courseFullScoreList;
+
 	@Schema(description = "备注")
 	private String remark;
 

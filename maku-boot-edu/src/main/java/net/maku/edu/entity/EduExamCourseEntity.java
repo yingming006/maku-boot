@@ -31,7 +31,7 @@ public class EduExamCourseEntity extends BaseEntity {
 	/**
 	* 满分成绩
 	*/
-	private BigDecimal fullScore;
+	private Integer fullScore;
 
 	/**
 	* 是否启用
