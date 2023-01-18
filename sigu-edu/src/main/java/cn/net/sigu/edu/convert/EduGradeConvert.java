@@ -1,0 +1,26 @@
+package cn.net.sigu.edu.convert;
+
+import cn.net.sigu.edu.entity.EduGradeEntity;
+import cn.net.sigu.edu.vo.EduGradeVO;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+import java.util.List;
+
+/**
+* 年级信息表
+*
+* @author yingming006 yingming006@foxmail.com
+* @since 1.0.0 2022-12-20
+*/
+@Mapper
+public interface EduGradeConvert {
+    EduGradeConvert INSTANCE = Mappers.getMapper(EduGradeConvert.class);
+
+    EduGradeEntity convert(EduGradeVO vo);
+
+    EduGradeVO convert(EduGradeEntity entity);
+
+    List<EduGradeVO> convertList(List<EduGradeEntity> list);
+
+}

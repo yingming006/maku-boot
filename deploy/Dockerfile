@@ -1,4 +1,4 @@
-# 构建镜像，执行命令：【docker build -t makunet:1.0 .】
+# 构建镜像，执行命令：【docker build -t sigu:1.0 .】
 FROM openjdk:8u212-jre
 MAINTAINER 阿沐
 

@@ -5,7 +5,7 @@
 -- HeidiSQL 版本:                  12.1.0.6537
 -- --------------------------------------------------------
 
--- 导出  表 maku_boot.edu_clazz 结构
+-- 导出  表 sigu_boot.edu_clazz 结构
 DROP TABLE IF EXISTS `edu_clazz`;
 CREATE TABLE IF NOT EXISTS `edu_clazz`
 (
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `edu_clazz`
 
 -- 数据导出被取消选择。
 
--- 导出  表 maku_boot.edu_course 结构
+-- 导出  表 sigu_boot.edu_course 结构
 DROP TABLE IF EXISTS `edu_course`;
 CREATE TABLE IF NOT EXISTS `edu_course`
 (
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `edu_course`
 
 -- 数据导出被取消选择。
 
--- 导出  表 maku_boot.edu_exam 结构
+-- 导出  表 sigu_boot.edu_exam 结构
 DROP TABLE IF EXISTS `edu_exam`;
 CREATE TABLE IF NOT EXISTS `edu_exam`
 (
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `edu_exam`
 
 -- 数据导出被取消选择。
 
--- 导出  表 maku_boot.edu_exam_score 结构
+-- 导出  表 sigu_boot.edu_exam_score 结构
 DROP TABLE IF EXISTS `edu_exam_score`;
 CREATE TABLE IF NOT EXISTS `edu_exam_score`
 (
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `edu_exam_score`
 
 -- 数据导出被取消选择。
 
--- 导出  表 maku_boot.edu_grade 结构
+-- 导出  表 sigu_boot.edu_grade 结构
 DROP TABLE IF EXISTS `edu_grade`;
 CREATE TABLE IF NOT EXISTS `edu_grade`
 (
@@ -136,7 +136,7 @@ INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `versio
 INSERT INTO `edu_grade` (`id`, `name`, `stage`, `is_enabled`, `deleted`, `version`, `creator`, `create_time`, `updater`, `update_time`) VALUES (12, '高三', '3', NULL, 0, 0, '10000', '2022-12-18 16:31:05', '10000', '2022-12-18 16:31:05');
 
 
--- 导出  表 maku_boot.edu_semester 结构
+-- 导出  表 sigu_boot.edu_semester 结构
 DROP TABLE IF EXISTS `edu_semester`;
 CREATE TABLE IF NOT EXISTS `edu_semester`
 (
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `edu_semester`
 
 -- 数据导出被取消选择。
 
--- 导出  表 maku_boot.edu_student 结构
+-- 导出  表 sigu_boot.edu_student 结构
 DROP TABLE IF EXISTS `edu_student`;
 CREATE TABLE IF NOT EXISTS `edu_student`
 (
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `edu_student`
 
 -- 数据导出被取消选择。
 
--- 导出  表 maku_boot.edu_teacher 结构
+-- 导出  表 sigu_boot.edu_teacher 结构
 DROP TABLE IF EXISTS `edu_teacher`;
 CREATE TABLE IF NOT EXISTS `edu_teacher`
 (
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `edu_teacher`
 
 -- 数据导出被取消选择。
 
--- 导出  表 maku_boot.edu_teacher__clazz__course 结构
+-- 导出  表 sigu_boot.edu_teacher__clazz__course 结构
 DROP TABLE IF EXISTS `edu_teacher__clazz__course`;
 CREATE TABLE IF NOT EXISTS `edu_teacher__clazz__course`
 (

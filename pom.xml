@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.maku</groupId>
-    <artifactId>maku-boot</artifactId>
+    <groupId>cn.net.sigu</groupId>
+    <artifactId>sigu-boot</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>maku-boot</name>
-    <description>maku-boot</description>
-    <url>https://maku.net</url>
+    <name>sigu-boot</name>
+    <description>sigu-boot</description>
+    <url>https://sigu.net.cn</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -17,12 +17,12 @@
     </parent>
 
     <modules>
-        <module>maku-boot-edu</module>
-        <module>maku-boot-system</module>
-        <module>maku-boot-module</module>
-        <module>maku-boot-api</module>
-        <module>maku-framework</module>
-        <module>maku-server</module>
+        <module>sigu-edu</module>
+        <module>sigu-boot-system</module>
+        <module>sigu-boot-module</module>
+        <module>sigu-boot-api</module>
+        <module>sigu-framework</module>
+        <module>sigu-server</module>
     </modules>
 
     <properties>

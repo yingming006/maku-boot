@@ -1,11 +1,11 @@
 version: '3.9'
 services:
-  maku-boot:
-    image: makunet:1.0
-    container_name: maku-boot
+  sigu-boot:
+    image: sigu:1.0
+    container_name: sigu-boot
     ports:
-      - 8080:8080
+      - 9001:9001
     environment:
       - spring.profiles.active=prod
     volumes:
-      - /work/www/maku-boot/maku-server.jar:/app/app.jar
+      - /work/www/sigu-boot/sigu-server.jar:/app/app.jar
