@@ -106,7 +106,11 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
                 newEntity.setExamId(this.examId);
                 newEntity.setStudentId(student.getId());
                 newEntity.setCourseId(Long.valueOf(headMap.get(i)));
-                newEntity.setScore(new BigDecimal(map.get(i)));
+                if (map.get(i) != null) {
+                    newEntity.setScore(new BigDecimal(map.get(i)));
+                } else {
+                    newEntity.setScore(null);
+                }
                 list.add(newEntity);
             }
         }
