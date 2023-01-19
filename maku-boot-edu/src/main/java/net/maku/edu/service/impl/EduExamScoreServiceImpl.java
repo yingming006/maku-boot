@@ -75,14 +75,17 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
             Long stuId = vo.getStudentId();
             boolean isZero = true;
             LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
+            BigDecimal totalScore = BigDecimal.ZERO;
             while (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId) && null != stuList.get(i).getScore()) {
                 String courseName = COURSE_PREFIX + stuList.get(i).getCourseId();
                 BigDecimal score = stuList.get(i).getScore();
                 scoreMap.put(courseName, score);
+                totalScore = totalScore.add(score);
                 i++;
                 isZero = false;
             }
             vo.setScoreList(scoreMap);
+            vo.setTotalScore(totalScore);
             result.add(vo);
             if (isZero) {
                 i++;
@@ -155,6 +158,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
         }
 
         LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
+        BigDecimal totalScore = BigDecimal.ZERO;
         for (EduExamScoreVO vo : stuList) {
             if (null == vo.getCourseId()) {
                 continue;
@@ -163,11 +167,13 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
             String courseName = COURSE_PREFIX + vo.getCourseId();
             BigDecimal score = vo.getScore();
             scoreMap.put(courseName, score);
+            totalScore = totalScore.add(score);
         }
 
         EduExamScoreVO result = stuList.get(0);
-        result.setScoreList(scoreMap);
         result.setExamId(query.getExamId());
+        result.setScoreList(scoreMap);
+        result.setTotalScore(totalScore);
 
         return result;
     }

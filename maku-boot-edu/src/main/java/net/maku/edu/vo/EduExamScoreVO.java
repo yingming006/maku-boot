@@ -76,6 +76,9 @@ public class EduExamScoreVO implements Serializable {
 
 	@Schema(description = "成绩/修改用")
 	private List<EduExamScoreDetail> scoreDetailList;
+
+	@Schema(description = "总分")
+	private BigDecimal totalScore;
 }
 
 
