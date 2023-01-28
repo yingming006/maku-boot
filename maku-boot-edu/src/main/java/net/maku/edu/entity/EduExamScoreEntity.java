@@ -44,6 +44,11 @@ public class EduExamScoreEntity extends BaseEntity {
 	private BigDecimal score;
 
 	/**
+	 * 是否缺考
+	 */
+	private Integer missed;
+
+	/**
 	* 是否启用
 	*/
 	private Integer isEnabled;

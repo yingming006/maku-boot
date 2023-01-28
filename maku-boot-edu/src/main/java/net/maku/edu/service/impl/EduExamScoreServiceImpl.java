@@ -76,7 +76,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
             boolean isZero = true;
             LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
             BigDecimal totalScore = BigDecimal.ZERO;
-            while (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId) && null != stuList.get(i).getScore()) {
+            while (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId) && null != stuList.get(i).getScore() && stuList.get(i).getMissed() != 1) {
                 String courseName = COURSE_PREFIX + stuList.get(i).getCourseId();
                 BigDecimal score = stuList.get(i).getScore();
                 scoreMap.put(courseName, score);

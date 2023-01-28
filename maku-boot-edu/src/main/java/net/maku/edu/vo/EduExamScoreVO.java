@@ -48,6 +48,9 @@ public class EduExamScoreVO implements Serializable {
 	@Schema(description = "成绩")
 	private BigDecimal score;
 
+	@Schema(description = "是否缺考")
+	private Integer missed;
+
 	@Schema(description = "是否启用")
 	private Integer isEnabled;
 
