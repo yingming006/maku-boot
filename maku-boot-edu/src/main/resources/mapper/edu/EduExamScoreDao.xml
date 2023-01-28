@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="examScoreColumns">
-        es.id,es.exam_id,es.course_id,es.score,es.is_enabled
+        es.id,es.exam_id,es.course_id,es.score,es.missed,es.is_enabled
         ,es.deleted,es.version,es.creator,es.create_time,es.updater,es.update_time
     </sql>
 
