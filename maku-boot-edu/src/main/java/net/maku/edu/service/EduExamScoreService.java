@@ -1,5 +1,6 @@
 package net.maku.edu.service;
 
+import net.maku.edu.vo.EduExamStudentScoreVO;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.BaseService;
 import net.maku.edu.vo.EduExamScoreVO;
@@ -19,10 +20,11 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
 
     /**
      * 查询考试学生列表，包括成绩
+     *
      * @param query
      * @return
      */
-    PageResult<EduExamScoreVO> page(EduExamScoreQuery query);
+    PageResult<EduExamStudentScoreVO> page(EduExamScoreQuery query);
 
     /**
      * 保存学生成绩
@@ -34,7 +36,7 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
      * 更新学生成绩
      * @param vo
      */
-    void update(EduExamScoreVO vo);
+    void update(EduExamStudentScoreVO vo);
 
     /**
      * 删除
@@ -47,7 +49,7 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
      * @param query
      * @return
      */
-    EduExamScoreVO getByExamIdWithStuId(EduExamScoreQuery query);
+    EduExamStudentScoreVO getByExamIdWithStuId(EduExamScoreQuery query);
 
     /**
      * 导出模板
@@ -67,5 +69,5 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
      * @param query
      * @return
      */
-    PageResult<EduExamScoreVO> pageWithoutScore(EduExamScoreQuery query);
+    PageResult<EduExamStudentScoreVO> pageWithoutScore(EduExamScoreQuery query);
 }

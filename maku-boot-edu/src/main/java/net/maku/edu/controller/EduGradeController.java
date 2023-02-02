@@ -10,6 +10,7 @@ import net.maku.edu.entity.EduGradeEntity;
 import net.maku.edu.service.EduGradeService;
 import net.maku.edu.query.EduGradeQuery;
 import net.maku.edu.vo.EduGradeVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,9 @@ import java.util.List;
 @Tag(name="年级信息表")
 @AllArgsConstructor
 public class EduGradeController {
-    private final EduGradeService eduGradeService;
+
+    @Autowired
+    private EduGradeService eduGradeService;
 
     @GetMapping("page")
     @Operation(summary = "分页")

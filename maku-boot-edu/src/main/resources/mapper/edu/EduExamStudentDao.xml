@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.maku.edu.dao.EduExamStudentDao">
+
+    <resultMap type="net.maku.edu.entity.EduExamStudentEntity" id="eduExamStudentMap">
+        <result property="id" column="id"/>
+        <result property="examId" column="exam_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="examineeNo" column="examinee_no"/>
+        <result property="clazzRank" column="clazz_rank"/>
+        <result property="gradeRank" column="grade_rank"/>
+        <result property="deleted" column="deleted"/>
+        <result property="version" column="version"/>
+        <result property="creator" column="creator"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updater" column="updater"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        est.id,est.exam_id,est.student_id,est.clazz_id,est.examinee_no,est.missed
+        ,est.total_score,est.clazz_rank,est.grade_rank
+        ,est.deleted,est.version,est.creator,est.create_time,est.updater,est.update_time
+    </sql>
+
+    <select id="selectAllList" resultType="net.maku.edu.vo.EduExamStudentScoreVO">
+        SELECT
+        <include refid="baseColumns"/>
+        ,stu.no AS student_no,stu.name AS student_name, stu.clazz_id
+        FROM edu_exam_student est
+        LEFT JOIN edu_student stu ON est.student_id = stu.id
+        <where>
+            est.deleted = 0
+            <if test="query.examId != null">
+                AND est.exam_id = #{query.examId}
+            </if>
+            <if test="query.clazzId != null">
+                AND est.clazz_id = #{query.clazzId}
+            </if>
+            <if test="query.studentId != null">
+                AND est.student_id = #{query.studentId}
+            </if>
+            <if test="query.id != null">
+                AND est.id = #{query.id}
+            </if>
+        </where>
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

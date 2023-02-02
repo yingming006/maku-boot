@@ -10,6 +10,7 @@ import net.maku.edu.service.EduCourseService;
 import net.maku.edu.vo.EduCourseVO;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,9 @@ import java.util.List;
 @Tag(name="课程信息表")
 @AllArgsConstructor
 public class EduCourseController {
-    private final EduCourseService eduCourseService;
+
+    @Autowired
+    private EduCourseService eduCourseService;
 
     @GetMapping("page")
     @Operation(summary = "分页")

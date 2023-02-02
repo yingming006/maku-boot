@@ -9,23 +9,26 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fhs.trans.service.impl.DictionaryTransService;
 import lombok.AllArgsConstructor;
-import net.maku.edu.convert.EduExamConvert;
-import net.maku.edu.convert.EduExamScoreConvert;
+import net.maku.edu.convert.*;
 import net.maku.edu.dao.EduExamScoreDao;
 import net.maku.edu.entity.EduExamEntity;
 import net.maku.edu.entity.EduExamScoreEntity;
+import net.maku.edu.entity.EduExamStudentEntity;
 import net.maku.edu.listener.EduExamScoreListener;
 import net.maku.edu.query.EduExamScoreQuery;
 import net.maku.edu.service.EduExamScoreService;
 import net.maku.edu.service.EduExamService;
+import net.maku.edu.service.EduExamStudentService;
 import net.maku.edu.vo.EduExamScoreDetail;
 import net.maku.edu.vo.EduExamScoreVO;
+import net.maku.edu.vo.EduExamStudentScoreVO;
 import net.maku.edu.vo.EduExamVO;
 import net.maku.framework.common.constant.Constant;
 import net.maku.framework.common.exception.ServerException;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.impl.BaseServiceImpl;
 import net.maku.framework.common.utils.ExcelUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -45,53 +49,62 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, EduExamScoreEntity> implements EduExamScoreService {
 
-    private final EduExamService eduExamService;
+    @Autowired
+    private EduExamService eduExamService;
 
-    private final DictionaryTransService dictionaryTransService;
+    @Autowired
+    private DictionaryTransService dictionaryTransService;
 
-    private final EduExamConvert eduExamConvert;
+    @Autowired
+    private EduExamConvert eduExamConvert;
 
     private final String COURSE_PREFIX = "course_";
 
     @Override
-    public PageResult<EduExamScoreVO> page(EduExamScoreQuery query) {
-
+    public PageResult<EduExamStudentScoreVO> page(EduExamScoreQuery query) {
+//
         query.setSearchCount(false);
         List<EduExamScoreVO> stuList = baseMapper.selectAllList(getWrapper(query), query);
-
-        // 初始化成绩，默认为0
-        EduExamEntity entity = eduExamService.getById(query.getExamId());
-        EduExamVO examVO = eduExamConvert.convert(entity);
-        List<String> courseList = examVO.getCourseList();
-        LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
-        for (String s : courseList) {
-            scoreZeroMap.put(COURSE_PREFIX + s, BigDecimal.ZERO);
-        }
-
-        // 为每位学生成绩赋值
-        List<EduExamScoreVO> result = new ArrayList<>();
-        for (int i = 0; i < stuList.size(); ) {
-            EduExamScoreVO vo = stuList.get(i);
-            Long stuId = vo.getStudentId();
-            boolean isZero = true;
-            LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
-            BigDecimal totalScore = BigDecimal.ZERO;
-            while (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId) && null != stuList.get(i).getScore()) {
-                String courseName = COURSE_PREFIX + stuList.get(i).getCourseId();
-                BigDecimal score = stuList.get(i).getScore();
-                scoreMap.put(courseName, score);
-                totalScore = totalScore.add(score);
-                i++;
-                isZero = false;
-            }
-            vo.setScoreList(scoreMap);
-            vo.setTotalScore(totalScore);
-            result.add(vo);
-            if (isZero) {
-                i++;
-            }
-        }
-        return new PageResult<>(result, result.size());
+//
+//        // 初始化成绩，默认为0
+//        EduExamEntity entity = eduExamService.getById(query.getExamId());
+//        EduExamVO examVO = eduExamConvert.convert(entity);
+//        List<String> courseList = examVO.getCourseList();
+//        LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
+//        for (String s : courseList) {
+//            scoreZeroMap.put(COURSE_PREFIX + s, BigDecimal.ZERO);
+//        }
+//
+//        // 为每位学生成绩赋值
+//        List<EduExamStudentScoreVO> result = new ArrayList<>();
+//        for (int i = 0; i < stuList.size(); ) {
+//            EduExamScoreVO vo = stuList.get(i);
+//            Long stuId = vo.getStudentId();
+//            boolean isZero = true;
+//            LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
+//            BigDecimal totalScore = BigDecimal.ZERO;
+//            while (i < stuList.size() && Objects.equals(stuList.get(i).getStudentId(), stuId) && null != stuList.get(i).getScore()) {
+//                String courseName = COURSE_PREFIX + stuList.get(i).getCourseId();
+//                BigDecimal score = stuList.get(i).getScore();
+//                scoreMap.put(courseName, score);
+//                totalScore = totalScore.add(score);
+//                i++;
+//                isZero = false;
+//            }
+//
+//            // 学生考试信息
+//            EduExamStudentEntity examStudent = eduExamStudentService.getOne(new LambdaQueryWrapper<EduExamStudentEntity>()
+//                    .eq(EduExamStudentEntity::getExamId, vo.getExamId())
+//                    .eq(EduExamStudentEntity::getStudentId, vo.getStudentId())
+//            );
+//
+//
+//            if (isZero) {
+//                i++;
+//            }
+//        }
+//        return new PageResult<>(result, result.size());
+        return null;
     }
 
     private LambdaQueryWrapper<EduExamScoreEntity> getWrapper(EduExamScoreQuery query) {
@@ -112,7 +125,7 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
     }
 
     @Override
-    public void update(EduExamScoreVO vo) {
+    public void update(EduExamStudentScoreVO vo) {
 
         // 获取该次考试考生所有成绩记录
         List<EduExamScoreEntity> entities = baseMapper.selectList(new QueryWrapper<EduExamScoreEntity>().lambda()
@@ -144,38 +157,41 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
     }
 
     @Override
-    public EduExamScoreVO getByExamIdWithStuId(EduExamScoreQuery query) {
-        query.setSearchCount(false);
-        List<EduExamScoreVO> stuList = baseMapper.selectAllList(Wrappers.lambdaQuery(), query);
+    public EduExamStudentScoreVO getByExamIdWithStuId(EduExamScoreQuery query) {
+//        query.setSearchCount(false);
+//        List<EduExamScoreVO> stuList = baseMapper.selectAllList(Wrappers.lambdaQuery(), query);
+//
+//        // 初始化成绩，默认为0
+//        EduExamEntity entity = eduExamService.getById(query.getExamId());
+//        EduExamVO examVO = eduExamConvert.convert(entity);
+//        List<String> courseList = examVO.getCourseList();
+//        LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
+//        for (String s : courseList) {
+//            scoreZeroMap.put(COURSE_PREFIX + s, BigDecimal.ZERO);
+//        }
+//
+//        LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
+//        BigDecimal totalScore = BigDecimal.ZERO;
+//        for (EduExamScoreVO vo : stuList) {
+//            if (null == vo.getCourseId()) {
+//                continue;
+//            }
+//
+//            String courseName = COURSE_PREFIX + vo.getCourseId();
+//            BigDecimal score = vo.getScore();
+//            scoreMap.put(courseName, score);
+//            totalScore = totalScore.add(score);
+//        }
+//
+//        EduExamScoreVO examScoreVO = stuList.get(0);
+//
+//        // 学生考试信息
+//        EduExamStudentEntity examStudent = eduExamStudentService.getOne(new LambdaQueryWrapper<EduExamStudentEntity>()
+//                .eq(EduExamStudentEntity::getExamId, examScoreVO.getExamId())
+//                .eq(EduExamStudentEntity::getStudentId, examScoreVO.getStudentId())
+//        );
 
-        // 初始化成绩，默认为0
-        EduExamEntity entity = eduExamService.getById(query.getExamId());
-        EduExamVO examVO = eduExamConvert.convert(entity);
-        List<String> courseList = examVO.getCourseList();
-        LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
-        for (String s : courseList) {
-            scoreZeroMap.put(COURSE_PREFIX + s, BigDecimal.ZERO);
-        }
-
-        LinkedHashMap<String, BigDecimal> scoreMap = new LinkedHashMap<>(scoreZeroMap);
-        BigDecimal totalScore = BigDecimal.ZERO;
-        for (EduExamScoreVO vo : stuList) {
-            if (null == vo.getCourseId()) {
-                continue;
-            }
-
-            String courseName = COURSE_PREFIX + vo.getCourseId();
-            BigDecimal score = vo.getScore();
-            scoreMap.put(courseName, score);
-            totalScore = totalScore.add(score);
-        }
-
-        EduExamScoreVO result = stuList.get(0);
-        result.setExamId(query.getExamId());
-        result.setScoreList(scoreMap);
-        result.setTotalScore(totalScore);
-
-        return result;
+        return null;
     }
 
     @Override
@@ -203,32 +219,44 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
     }
 
     @Override
-    public PageResult<EduExamScoreVO> pageWithoutScore(EduExamScoreQuery query) {
+    public PageResult<EduExamStudentScoreVO> pageWithoutScore(EduExamScoreQuery query) {
 
-        query.setSearchCount(false);
-        List<EduExamScoreVO> stuList = baseMapper.selectAllList(getWrapper(query), query);
-
-        // 每位学生成绩为空
-        EduExamEntity entity = eduExamService.getById(query.getExamId());
-        EduExamVO examVO = eduExamConvert.convert(entity);
-        List<String> courseList = examVO.getCourseList();
-        LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
-        for (String s : courseList) {
-            scoreZeroMap.put(COURSE_PREFIX + s, null);
-        }
-
-        // 先对结果去重，然后为每位学生赋值，排序
-        Set<EduExamScoreVO> stuSet = new TreeSet<>(Comparator.comparing(EduExamScoreVO::getStudentId));
-        stuSet.addAll(stuList);
-        List<EduExamScoreVO> result = new ArrayList<>(stuSet);
-        result.forEach(stu->stu.setScoreList(scoreZeroMap));
-        result = result.stream().sorted(Comparator.comparingLong(EduExamScoreVO::getStudentNo)).collect(Collectors.toList());
-
-        return new PageResult<>(result, result.size());
+//        query.setSearchCount(false);
+//        List<EduExamScoreVO> stuList = baseMapper.selectAllList(getWrapper(query), query);
+//
+//        // 每位学生成绩为空
+//        EduExamEntity entity = eduExamService.getById(query.getExamId());
+//        EduExamVO examVO = eduExamConvert.convert(entity);
+//        List<String> courseList = examVO.getCourseList();
+//        LinkedHashMap<String, BigDecimal> scoreZeroMap = new LinkedHashMap<>();
+//        for (String s : courseList) {
+//            scoreZeroMap.put(COURSE_PREFIX + s, null);
+//        }
+//
+//        // 先对结果去重，然后为每位学生赋值，排序
+//        Set<EduExamScoreVO> stuSet = new TreeSet<>(Comparator.comparing(EduExamScoreVO::getStudentId));
+//        stuSet.addAll(stuList);
+//        List<EduExamScoreVO> scoreList = new ArrayList<>(stuSet);
+//
+//
+//        List<EduExamStudentScoreVO> result = new ArrayList<>();
+//        List<EduExamStudentScoreVO> finalResult = result;
+//        scoreList.forEach(score-> {
+//            // 学生考试信息
+//            EduExamStudentEntity examStudent = eduExamStudentService.getOne(new LambdaQueryWrapper<EduExamStudentEntity>()
+//                    .eq(EduExamStudentEntity::getExamId, score.getExamId())
+//                    .eq(EduExamStudentEntity::getStudentId, score.getStudentId())
+//            );
+//
+//        });
+//        result = result.stream().sorted(Comparator.comparingLong(EduExamStudentScoreVO::getStudentNo)).collect(Collectors.toList());
+//
+//        return new PageResult<>(result, result.size());
+        return null;
     }
 
     /**
-     * excel 表头
+     * 导出 excel 表头
      * @param entity
      * @return
      */
@@ -259,13 +287,27 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
      */
     private List<List<Object>> examScoreDataList(EduExamScoreQuery query) {
         List<List<Object>> list = ListUtils.newArrayList();
-        List<EduExamScoreVO> result = pageWithoutScore(query).getList();
-        for (EduExamScoreVO eduExamScoreVO : result) {
+        List<EduExamStudentScoreVO> result = pageWithoutScore(query).getList();
+        for (EduExamStudentScoreVO examStudentScoreVO : result) {
             List<Object> data = ListUtils.newArrayList();
-            data.add(eduExamScoreVO.getStudentNo());
-            data.add(eduExamScoreVO.getStudentName());
+            data.add(examStudentScoreVO.getStudentNo());
+            data.add(examStudentScoreVO.getStudentName());
             list.add(data);
         }
         return list;
+    }
+
+    /**
+     * 计算成绩排名
+     */
+    private void calcExamScoreRank(EduExamScoreQuery query, List<EduExamStudentScoreVO> list) {
+        // TODO 排名
+        List<EduExamStudentScoreVO> result = list.stream()
+                .sorted(Comparator.comparing(EduExamStudentScoreVO::getTotalScore).reversed())
+                .sorted(Comparator.comparing(EduExamStudentScoreVO::getStudentNo))
+                .collect(Collectors.toList());
+
+        AtomicInteger i = new AtomicInteger(1);
+        result.forEach(score -> score.setClazzRank(i.getAndIncrement()));
     }
 }

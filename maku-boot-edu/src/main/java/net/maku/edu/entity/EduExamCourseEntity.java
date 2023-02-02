@@ -33,15 +33,4 @@ public class EduExamCourseEntity extends BaseEntity {
 	*/
 	private Integer fullScore;
 
-	/**
-	* 是否启用
-	*/
-	private Integer isEnabled;
-
-
-
-
-
-
-
 }

@@ -10,6 +10,7 @@ import net.maku.edu.entity.EduTeacherEntity;
 import net.maku.edu.service.EduTeacherService;
 import net.maku.edu.query.EduTeacherQuery;
 import net.maku.edu.vo.EduTeacherVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,9 @@ import java.util.List;
 @Tag(name="教师信息表")
 @AllArgsConstructor
 public class EduTeacherController {
-    private final EduTeacherService eduTeacherService;
+
+    @Autowired
+    private EduTeacherService eduTeacherService;
 
     @GetMapping("page")
     @Operation(summary = "分页")

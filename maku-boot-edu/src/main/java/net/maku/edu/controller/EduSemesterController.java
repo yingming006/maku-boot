@@ -10,6 +10,7 @@ import net.maku.edu.entity.EduSemesterEntity;
 import net.maku.edu.service.EduSemesterService;
 import net.maku.edu.query.EduSemesterQuery;
 import net.maku.edu.vo.EduSemesterVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,9 @@ import java.util.List;
 @Tag(name="学期信息表")
 @AllArgsConstructor
 public class EduSemesterController {
-    private final EduSemesterService eduSemesterService;
+
+    @Autowired
+    private EduSemesterService eduSemesterService;
 
     @GetMapping("page")
     @Operation(summary = "分页")

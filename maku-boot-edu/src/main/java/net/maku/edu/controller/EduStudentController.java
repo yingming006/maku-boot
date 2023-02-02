@@ -10,6 +10,7 @@ import net.maku.edu.entity.EduStudentEntity;
 import net.maku.edu.service.EduStudentService;
 import net.maku.edu.query.EduStudentQuery;
 import net.maku.edu.vo.EduStudentVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,9 @@ import java.util.List;
 @Tag(name="学生信息表")
 @AllArgsConstructor
 public class EduStudentController {
-    private final EduStudentService eduStudentService;
+
+    @Autowired
+    private EduStudentService eduStudentService;
 
     @GetMapping("page")
     @Operation(summary = "分页")

@@ -6,21 +6,20 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.AllArgsConstructor;
 import net.maku.edu.convert.EduExamConvert;
 import net.maku.edu.dao.EduExamDao;
-import net.maku.edu.entity.EduExamClazzEntity;
-import net.maku.edu.entity.EduExamCourseEntity;
-import net.maku.edu.entity.EduExamEntity;
+import net.maku.edu.dao.EduExamStudentDao;
+import net.maku.edu.entity.*;
 import net.maku.edu.query.EduExamQuery;
-import net.maku.edu.service.EduExamClazzService;
-import net.maku.edu.service.EduExamCourseService;
-import net.maku.edu.service.EduExamService;
+import net.maku.edu.service.*;
 import net.maku.edu.vo.EduExamVO;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 考试信息表
@@ -32,11 +31,20 @@ import java.util.List;
 @AllArgsConstructor
 public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntity> implements EduExamService {
 
-    private final EduExamConvert eduExamConvert;
+    @Autowired
+    private EduExamConvert eduExamConvert;
 
-    private final EduExamClazzService eduExamClazzService;
+    @Autowired
+    private EduExamClazzService eduExamClazzService;
 
-    private final EduExamCourseService eduExamCourseService;
+    @Autowired
+    private EduExamCourseService eduExamCourseService;
+
+    @Autowired
+    private EduStudentService eduStudentService;
+
+    @Autowired
+    private EduExamStudentDao eduExamStudentDao;
 
     @Override
     public PageResult<EduExamVO> page(EduExamQuery query) {
@@ -58,9 +66,26 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
 
         vo.setId(entity.getId());
 
-        // 保存考试班级、考试科目
+        // 保存考试班级、考试科目、考试学生
         saveEduExamClazz(vo);
         saveEduExamCourse(vo);
+        saveEduExamStudent(vo);
+    }
+
+    /**
+     * 保存考试学生信息
+     * @param vo
+     */
+    private void saveEduExamStudent(EduExamVO vo) {
+        List<String> clazzList = vo.getClazzList();
+
+        List<EduStudentEntity> students = eduStudentService.list(new LambdaQueryWrapper<EduStudentEntity>().in(EduStudentEntity::getClazzId, clazzList));
+
+        List<EduExamStudentEntity> entityList = students.stream()
+                .map(stu-> EduExamStudentEntity.builder().examId(vo.getId()).studentId(stu.getId()).clazzId(stu.getClazzId()).build())
+                .collect(Collectors.toList());
+
+        entityList.forEach(eduExamStudentEntity -> eduExamStudentDao.insert(eduExamStudentEntity));
     }
 
     /**
@@ -113,6 +138,10 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
         // 删除原有关联数据，重新保存
         eduExamCourseService.remove(new LambdaQueryWrapper<EduExamCourseEntity>().eq(EduExamCourseEntity::getExamId, vo.getId()));
         this.saveEduExamCourse(vo);
+
+        // 删除原有关联数据，重新保存
+        eduExamStudentDao.delete(new LambdaQueryWrapper<EduExamStudentEntity>().eq(EduExamStudentEntity::getExamId, vo.getId()));
+        this.saveEduExamStudent(vo);
     }
 
     @Override
@@ -122,6 +151,7 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
         // 删除考试班级表记录和考试科目表记录
         eduExamClazzService.remove(new LambdaQueryWrapper<EduExamClazzEntity>().in(EduExamClazzEntity::getExamId, idList));
         eduExamCourseService.remove(new LambdaQueryWrapper<EduExamCourseEntity>().in(EduExamCourseEntity::getExamId, idList));
+        eduExamStudentDao.delete(new LambdaQueryWrapper<EduExamStudentEntity>().in(EduExamStudentEntity::getExamId, idList));
     }
 
 }

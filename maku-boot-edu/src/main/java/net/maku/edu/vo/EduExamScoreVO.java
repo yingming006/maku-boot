@@ -48,12 +48,6 @@ public class EduExamScoreVO implements Serializable {
 	@Schema(description = "成绩")
 	private BigDecimal score;
 
-	@Schema(description = "是否缺考")
-	private Integer missed;
-
-	@Schema(description = "是否启用")
-	private Integer isEnabled;
-
 	@Schema(description = "是否删除")
 	private Integer deleted;
 
@@ -73,15 +67,6 @@ public class EduExamScoreVO implements Serializable {
 	@Schema(description = "更新时间")
 	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
 	private Date updateTime;
-
-	@Schema(description = "成绩/查询结果")
-	private LinkedHashMap<String, BigDecimal> scoreList;
-
-	@Schema(description = "成绩/修改用")
-	private List<EduExamScoreDetail> scoreDetailList;
-
-	@Schema(description = "总分")
-	private BigDecimal totalScore;
 }
 
 

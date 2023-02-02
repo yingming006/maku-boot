@@ -7,7 +7,6 @@
         <result property="teacherId" column="teacher_id"/>
         <result property="clazzId" column="clazz_id"/>
         <result property="courseId" column="course_id"/>
-        <result property="isEnabled" column="is_enabled"/>
         <result property="deleted" column="deleted"/>
         <result property="version" column="version"/>
         <result property="creator" column="creator"/>

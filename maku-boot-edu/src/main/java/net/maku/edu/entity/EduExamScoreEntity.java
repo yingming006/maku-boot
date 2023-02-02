@@ -19,11 +19,6 @@ import java.math.BigDecimal;
 public class EduExamScoreEntity extends BaseEntity {
 
 	/**
-	 * 准考证号
-	 */
-	private Long examineeNo;
-
-	/**
 	* 考试id
 	*/
 	private Long examId;
@@ -42,15 +37,5 @@ public class EduExamScoreEntity extends BaseEntity {
 	* 成绩
 	*/
 	private BigDecimal score;
-
-	/**
-	 * 是否缺考
-	 */
-	private Integer missed;
-
-	/**
-	* 是否启用
-	*/
-	private Integer isEnabled;
 
 }

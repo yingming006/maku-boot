@@ -13,7 +13,7 @@ import net.maku.framework.common.entity.BaseEntity;
  */
 @EqualsAndHashCode(callSuper=false)
 @Data
-@TableName("edu_teacher__clazz__course")
+@TableName("edu_teacher_clazz_course")
 public class EduTeacherClazzCourseEntity extends BaseEntity {
 	/**
 	* 教师id
@@ -29,10 +29,5 @@ public class EduTeacherClazzCourseEntity extends BaseEntity {
 	* 课程id
 	*/
 	private Long courseId;
-
-	/**
-	* 是否启用
-	*/
-	private Integer isEnabled;
 
 }

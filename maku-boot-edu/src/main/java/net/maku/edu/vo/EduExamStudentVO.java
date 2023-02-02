@@ -5,18 +5,19 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.io.Serializable;
 import net.maku.framework.common.utils.DateUtils;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
-* 考试科目表
+* 考试学生信息
 *
 * @author yingming006 yingming006@foxmail.com
-* @since 1.0.0 2023-01-11
+* @since 1.0.0 2023-01-28
 */
 @Data
-@Schema(description = "考试科目表")
-public class EduExamCourseVO implements Serializable {
+@Schema(description = "考试学生信息")
+public class EduExamStudentVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Schema(description = "id")
@@ -25,11 +26,26 @@ public class EduExamCourseVO implements Serializable {
 	@Schema(description = "考试id")
 	private Long examId;
 
-	@Schema(description = "课程id")
-	private Long courseId;
+	@Schema(description = "学生id")
+	private Long studentId;
 
-	@Schema(description = "满分成绩")
-	private BigDecimal fullScore;
+	@Schema(description = "准考证号")
+	private Long examineeNo;
+
+	@Schema(description = "总分")
+	private BigDecimal totalScore;
+
+	@Schema(description = "班级排名")
+	private Integer clazzRank;
+
+	@Schema(description = "年级排名")
+	private Integer gradeRank;
+
+	@Schema(description = "是否缺考")
+	private Integer missed;
+
+	@Schema(description = "是否启用")
+	private Integer isEnabled;
 
 	@Schema(description = "是否删除")
 	private Integer deleted;

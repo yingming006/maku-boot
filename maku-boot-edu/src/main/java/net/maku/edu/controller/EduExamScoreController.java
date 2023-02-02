@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import net.maku.edu.query.EduExamScoreQuery;
 import net.maku.edu.service.EduExamScoreService;
 import net.maku.edu.vo.EduExamScoreVO;
+import net.maku.edu.vo.EduExamStudentScoreVO;
 import net.maku.framework.common.page.PageResult;
 import net.maku.framework.common.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,17 +24,19 @@ import java.util.List;
 * @since 1.0.0 2022-12-15
 */
 @RestController
-@RequestMapping("edu/score")
+@RequestMapping("edu/examScore")
 @Tag(name="考试成绩表")
 @AllArgsConstructor
 public class EduExamScoreController {
-    private final EduExamScoreService eduExamScoreService;
+
+    @Autowired
+    private EduExamScoreService eduExamScoreService;
 
     @GetMapping("page")
     @Operation(summary = "分页")
     @PreAuthorize("hasAuthority('edu:score:page')")
-    public Result<PageResult<EduExamScoreVO>> page(@Valid EduExamScoreQuery query){
-        PageResult<EduExamScoreVO> page = eduExamScoreService.page(query);
+    public Result<PageResult<EduExamStudentScoreVO>> page(@Valid EduExamScoreQuery query){
+        PageResult<EduExamStudentScoreVO> page = eduExamScoreService.page(query);
 
         return Result.ok(page);
     }
@@ -40,8 +44,8 @@ public class EduExamScoreController {
     @GetMapping("{examId}/{studentId}")
     @Operation(summary = "获取当前考试单个学生成绩")
     @PreAuthorize("hasAuthority('edu:score:info')")
-    public Result<EduExamScoreVO> get(@Valid EduExamScoreQuery query){
-        EduExamScoreVO entity = eduExamScoreService.getByExamIdWithStuId(query);
+    public Result<EduExamStudentScoreVO> get(@Valid EduExamScoreQuery query){
+        EduExamStudentScoreVO entity = eduExamScoreService.getByExamIdWithStuId(query);
         return Result.ok(entity);
     }
 
@@ -57,7 +61,7 @@ public class EduExamScoreController {
     @PutMapping
     @Operation(summary = "修改")
     @PreAuthorize("hasAuthority('edu:score:update')")
-    public Result<String> update(@RequestBody @Valid EduExamScoreVO vo){
+    public Result<String> update(@RequestBody @Valid EduExamStudentScoreVO vo){
         eduExamScoreService.update(vo);
         return Result.ok();
     }
@@ -93,8 +97,8 @@ public class EduExamScoreController {
     @GetMapping("pageWithoutScore")
     @Operation(summary = "分页，不带成绩，导出模板")
     @PreAuthorize("hasAuthority('edu:score:page')")
-    public Result<PageResult<EduExamScoreVO>> pageWithoutScore(@Valid EduExamScoreQuery query){
-        PageResult<EduExamScoreVO> page = eduExamScoreService.pageWithoutScore(query);
+    public Result<PageResult<EduExamStudentScoreVO>> pageWithoutScore(@Valid EduExamScoreQuery query){
+        PageResult<EduExamStudentScoreVO> page = eduExamScoreService.pageWithoutScore(query);
 
         return Result.ok(page);
     }

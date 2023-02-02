@@ -9,7 +9,6 @@
         <result property="studentId" column="student_id"/>
         <result property="courseId" column="course_id"/>
         <result property="score" column="score"/>
-        <result property="isEnabled" column="is_enabled"/>
         <result property="deleted" column="deleted"/>
         <result property="version" column="version"/>
         <result property="creator" column="creator"/>
@@ -19,14 +18,15 @@
     </resultMap>
 
     <sql id="examScoreColumns">
-        es.id,es.exam_id,es.course_id,es.score,es.missed,es.is_enabled
+        es.id,es.exam_id,es.course_id,es.score
         ,es.deleted,es.version,es.creator,es.create_time,es.updater,es.update_time
     </sql>
 
-    <select id="selectListPage" resultType="net.maku.edu.vo.EduExamScoreVO">
+    <select id="selectListPage" resultType="net.maku.edu.vo.EduExamStudentScoreVO">
         SELECT
         <include refid="examScoreColumns"/>
         , stu.no AS student_no, stu.name AS student_name, stu.clazz_id, cou.name AS course_name
+        FROM edu_exam_student
         FROM edu_exam_score es
         LEFT JOIN
         (

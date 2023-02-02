@@ -27,9 +27,6 @@ public class EduTeacherClazzCourseVO implements Serializable {
 	@Schema(description = "课程id")
 	private Long courseId;
 
-	@Schema(description = "是否启用")
-	private Integer isEnabled;
-
 	@Schema(description = "是否删除")
 	private Integer deleted;
 
