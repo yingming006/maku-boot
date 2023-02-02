@@ -1,10 +1,10 @@
-package net.maku.framework.config;
+package net.maku.framework.common.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 .title("MakuBoot")
                 .description("MakuBoot")
                 .contact(contact)
-                .version("2.0")
+                .version("3.0")
                 .termsOfService("https://maku.net")
                 .license(new License().name("MIT")
                         .url("https://maku.net")));
