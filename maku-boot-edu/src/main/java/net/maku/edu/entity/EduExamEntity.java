@@ -3,7 +3,7 @@ package net.maku.edu.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.baomidou.mybatisplus.annotation.*;
-import net.maku.framework.common.entity.BaseEntity;
+import net.maku.framework.mybatis.entity.BaseEntity;
 
 import java.util.Date;
 

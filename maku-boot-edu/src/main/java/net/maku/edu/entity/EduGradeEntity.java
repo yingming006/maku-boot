@@ -1,10 +1,9 @@
 package net.maku.edu.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import com.baomidou.mybatisplus.annotation.*;
-import java.util.Date;
-import net.maku.framework.common.entity.BaseEntity;
+import net.maku.framework.mybatis.entity.BaseEntity;
 
 /**
  * 年级信息表

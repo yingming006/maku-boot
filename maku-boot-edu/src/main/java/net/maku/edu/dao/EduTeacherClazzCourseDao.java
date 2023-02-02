@@ -1,6 +1,6 @@
 package net.maku.edu.dao;
 
-import net.maku.framework.common.dao.BaseDao;
+import net.maku.framework.mybatis.dao.BaseDao;
 import net.maku.edu.entity.EduTeacherClazzCourseEntity;
 import org.apache.ibatis.annotations.Mapper;
 

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import net.maku.edu.entity.EduExamScoreEntity;
 import net.maku.edu.query.EduExamScoreQuery;
 import net.maku.edu.vo.EduExamScoreVO;
-import net.maku.framework.common.dao.BaseDao;
+import net.maku.framework.mybatis.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,10 +20,4 @@ import java.util.List;
  */
 @Mapper
 public interface EduExamScoreDao extends BaseDao<EduExamScoreEntity> {
-
-    IPage<EduExamScoreVO> selectListPage(IPage<EduExamScoreEntity> page, @Param(Constants.WRAPPER) LambdaQueryWrapper<EduExamScoreEntity> wrapper, @Param("query") EduExamScoreQuery query);
-
-    Long selectListCount(@Param(Constants.WRAPPER) LambdaQueryWrapper<EduExamScoreEntity> wrapper, EduExamScoreQuery query);
-
-    List<EduExamScoreVO> selectAllList(@Param(Constants.WRAPPER) LambdaQueryWrapper<EduExamScoreEntity> wrapper, @Param("query") EduExamScoreQuery query);
 }

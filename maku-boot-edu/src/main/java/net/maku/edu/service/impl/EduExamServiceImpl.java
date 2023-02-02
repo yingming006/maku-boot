@@ -11,8 +11,8 @@ import net.maku.edu.entity.*;
 import net.maku.edu.query.EduExamQuery;
 import net.maku.edu.service.*;
 import net.maku.edu.vo.EduExamVO;
-import net.maku.framework.common.page.PageResult;
-import net.maku.framework.common.service.impl.BaseServiceImpl;
+import net.maku.framework.common.utils.PageResult;
+import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +83,7 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
 
         List<EduExamStudentEntity> entityList = students.stream()
                 .map(stu-> EduExamStudentEntity.builder().examId(vo.getId()).studentId(stu.getId()).clazzId(stu.getClazzId()).build())
-                .collect(Collectors.toList());
+                .toList();
 
         entityList.forEach(eduExamStudentEntity -> eduExamStudentDao.insert(eduExamStudentEntity));
     }

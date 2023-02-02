@@ -3,9 +3,7 @@ package net.maku.edu.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.maku.framework.common.entity.BaseEntity;
-
-import java.math.BigDecimal;
+import net.maku.framework.mybatis.entity.BaseEntity;
 
 /**
  * 考试科目表

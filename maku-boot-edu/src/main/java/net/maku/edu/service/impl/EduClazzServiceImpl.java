@@ -10,12 +10,9 @@ import net.maku.edu.dao.EduClazzDao;
 import net.maku.edu.entity.EduClazzEntity;
 import net.maku.edu.query.EduClazzQuery;
 import net.maku.edu.service.EduClazzService;
-import net.maku.edu.service.EduGradeService;
-import net.maku.edu.service.EduSemesterService;
-import net.maku.edu.service.EduTeacherService;
 import net.maku.edu.vo.EduClazzVO;
-import net.maku.framework.common.page.PageResult;
-import net.maku.framework.common.service.impl.BaseServiceImpl;
+import net.maku.framework.common.utils.PageResult;
+import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

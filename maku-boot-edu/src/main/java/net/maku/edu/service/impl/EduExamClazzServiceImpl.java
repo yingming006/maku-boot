@@ -7,7 +7,7 @@ import net.maku.edu.dao.EduExamClazzDao;
 import net.maku.edu.entity.EduExamClazzEntity;
 import net.maku.edu.query.EduExamQuery;
 import net.maku.edu.service.EduExamClazzService;
-import net.maku.framework.common.service.impl.BaseServiceImpl;
+import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

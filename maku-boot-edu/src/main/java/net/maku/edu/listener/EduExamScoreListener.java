@@ -8,16 +8,20 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fhs.trans.service.impl.DictionaryTransService;
 import lombok.Setter;
 import net.maku.edu.entity.EduExamScoreEntity;
+import net.maku.edu.entity.EduExamStudentEntity;
 import net.maku.edu.entity.EduStudentEntity;
 import net.maku.edu.service.EduExamScoreService;
+import net.maku.edu.service.EduExamStudentService;
 import net.maku.edu.service.EduStudentService;
 import net.maku.framework.common.constant.Constant;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yingming006
@@ -35,12 +39,14 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
     private Map<Integer, String> headMap;
 
     private final EduExamScoreService eduExamScoreService;
+    private final EduExamStudentService eduExamStudentService;
     private final EduStudentService eduStudentService;
 
     private Long examId;
 
-    public EduExamScoreListener(EduExamScoreService eduExamScoreService, EduStudentService eduStudentService) {
+    public EduExamScoreListener(EduExamScoreService eduExamScoreService, EduExamStudentService eduExamStudentService, EduStudentService eduStudentService) {
         this.eduExamScoreService = eduExamScoreService;
+        this.eduExamStudentService = eduExamStudentService;
         this.eduStudentService = eduStudentService;
     }
 
@@ -67,8 +73,27 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void doAfterAllAnalysed(AnalysisContext context) {
+        // 保存成绩表
         saveData();
+        // 计算成绩
+        calcScore();
+    }
+
+    /**
+     * 计算总成绩
+     */
+    private void calcScore() {
+        List<EduExamStudentEntity> list = eduExamStudentService.list(new LambdaQueryWrapper<EduExamStudentEntity>().eq(EduExamStudentEntity::getExamId, this.examId));
+
+        list.forEach(entity -> {
+            List<EduExamScoreEntity> scores = eduExamScoreService.list(new LambdaQueryWrapper<EduExamScoreEntity>().eq(EduExamScoreEntity::getExamId, entity.getExamId()).eq(EduExamScoreEntity::getStudentId, entity.getStudentId()));
+            BigDecimal totalScore = scores.stream().map(EduExamScoreEntity::getScore).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+            entity.setTotalScore(totalScore);
+        });
+
+        eduExamStudentService.updateBatchById(list);
     }
 
     private void initHeadMap() {
@@ -80,7 +105,7 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
     }
 
     /**
-     * 加上存储数据库
+     * 保存成绩表
      */
     private void saveData() {
 
@@ -94,11 +119,7 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
                 if (null == headMap.get(i)) {
                     continue;
                 }
-                EduExamScoreEntity entity = eduExamScoreService.getOne(new LambdaQueryWrapper<EduExamScoreEntity>()
-                        .eq(EduExamScoreEntity::getExamId, this.examId)
-                        .eq(EduExamScoreEntity::getStudentId, student.getId())
-                        .eq(EduExamScoreEntity::getCourseId, Long.valueOf(headMap.get(i)))
-                );
+                EduExamScoreEntity entity = eduExamScoreService.getOne(new LambdaQueryWrapper<EduExamScoreEntity>().eq(EduExamScoreEntity::getExamId, this.examId).eq(EduExamScoreEntity::getStudentId, student.getId()).eq(EduExamScoreEntity::getCourseId, Long.valueOf(headMap.get(i))));
                 EduExamScoreEntity newEntity = new EduExamScoreEntity();
                 if (null != entity) {
                     newEntity.setId(entity.getId());

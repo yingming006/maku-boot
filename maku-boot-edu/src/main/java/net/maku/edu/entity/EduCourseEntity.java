@@ -3,7 +3,7 @@ package net.maku.edu.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.maku.framework.common.entity.BaseEntity;
+import net.maku.framework.mybatis.entity.BaseEntity;
 
 /**
  * 课程信息表

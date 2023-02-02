@@ -3,16 +3,12 @@ package net.maku.edu.dao;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import net.maku.edu.entity.EduExamScoreEntity;
-import net.maku.edu.query.EduExamScoreQuery;
+import net.maku.edu.entity.EduExamStudentEntity;
 import net.maku.edu.query.EduExamStudentQuery;
 import net.maku.edu.vo.EduExamStudentScoreVO;
-import net.maku.framework.common.dao.BaseDao;
-import net.maku.edu.entity.EduExamStudentEntity;
+import net.maku.framework.mybatis.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
 * 考试学生信息
@@ -23,5 +19,12 @@ import java.util.List;
 @Mapper
 public interface EduExamStudentDao extends BaseDao<EduExamStudentEntity> {
 
+    /**
+     * 分页查询
+     * @param page
+     * @param wrapper
+     * @param query
+     * @return
+     */
     IPage<EduExamStudentScoreVO> selectAllList(IPage<EduExamStudentEntity> page, @Param(Constants.WRAPPER) LambdaQueryWrapper<EduExamStudentEntity> wrapper, @Param("query") EduExamStudentQuery query);
 }

@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.maku.framework.common.query.Query;
 
-import javax.validation.constraints.NotNull;
-
 /**
 * 考试信息表查询
 *

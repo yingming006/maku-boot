@@ -2,19 +2,19 @@ package net.maku.edu.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.maku.edu.convert.EduExamConvert;
 import net.maku.edu.entity.EduExamEntity;
 import net.maku.edu.query.EduExamQuery;
 import net.maku.edu.service.EduExamService;
 import net.maku.edu.vo.EduExamVO;
-import net.maku.framework.common.page.PageResult;
+import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.common.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**

@@ -2,7 +2,7 @@ package net.maku.edu.service;
 
 import net.maku.edu.entity.EduExamClazzEntity;
 import net.maku.edu.query.EduExamQuery;
-import net.maku.framework.common.service.BaseService;
+import net.maku.framework.mybatis.service.BaseService;
 
 import java.util.List;
 

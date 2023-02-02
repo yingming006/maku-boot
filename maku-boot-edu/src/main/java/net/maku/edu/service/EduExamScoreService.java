@@ -1,12 +1,10 @@
 package net.maku.edu.service;
 
-import net.maku.edu.vo.EduExamStudentScoreVO;
-import net.maku.framework.common.page.PageResult;
-import net.maku.framework.common.service.BaseService;
-import net.maku.edu.vo.EduExamScoreVO;
-import net.maku.edu.query.EduExamScoreQuery;
 import net.maku.edu.entity.EduExamScoreEntity;
-import org.springframework.web.multipart.MultipartFile;
+import net.maku.edu.query.EduExamScoreQuery;
+import net.maku.edu.vo.EduExamScoreVO;
+import net.maku.framework.common.utils.PageResult;
+import net.maku.framework.mybatis.service.BaseService;
 
 import java.util.List;
 
@@ -19,12 +17,11 @@ import java.util.List;
 public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
 
     /**
-     * 查询考试学生列表，包括成绩
-     *
+     * 分页
      * @param query
      * @return
      */
-    PageResult<EduExamStudentScoreVO> page(EduExamScoreQuery query);
+    PageResult<EduExamScoreVO> page(EduExamScoreQuery query);
 
     /**
      * 保存学生成绩
@@ -36,38 +33,11 @@ public interface EduExamScoreService extends BaseService<EduExamScoreEntity> {
      * 更新学生成绩
      * @param vo
      */
-    void update(EduExamStudentScoreVO vo);
+    void update(EduExamScoreVO vo);
 
     /**
      * 删除
      * @param idList
      */
     void delete(List<Long> idList);
-
-    /**
-     * 获取学生成绩
-     * @param query
-     * @return
-     */
-    EduExamStudentScoreVO getByExamIdWithStuId(EduExamScoreQuery query);
-
-    /**
-     * 导出模板
-     * @param query
-     */
-    void exportTemplate(EduExamScoreQuery query);
-
-    /**
-     * 导入成绩
-     * @param file
-     * @param query
-     */
-    void importByExcel(MultipartFile file, EduExamScoreQuery query);
-
-    /**
-     * 查询考试学生列表，不查成绩
-     * @param query
-     * @return
-     */
-    PageResult<EduExamStudentScoreVO> pageWithoutScore(EduExamScoreQuery query);
 }
