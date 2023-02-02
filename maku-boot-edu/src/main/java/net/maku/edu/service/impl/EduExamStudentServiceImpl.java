@@ -68,15 +68,14 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
 
     private final String COURSE_PREFIX = "course_";
 
-    private final String SPLIT_CHAR = "\\.";
-
     @Override
     public PageResult<EduExamStudentScoreVO> page(EduExamStudentQuery query) {
 
         // 排序课程id
         String cId;
-        if (StrUtil.isNotBlank(query.getOrder()) && query.getOrder().contains(SPLIT_CHAR)) {
-            cId = query.getOrder().split(SPLIT_CHAR)[1];
+        String splitChar = "\\.";
+        if (StrUtil.isNotBlank(query.getOrder()) && query.getOrder().contains(splitChar)) {
+            cId = query.getOrder().split(splitChar)[1];
             query.setOrder("");
             query.setAsc(false);
         } else {
