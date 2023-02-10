@@ -22,6 +22,9 @@ public class EduClazzVO implements Serializable {
 	@Schema(description = "id")
 	private Long id;
 
+	@Schema(description = "班级编号")
+	private Long no;
+
 	@Schema(description = "行政班级")
 	private String name;
 
@@ -29,19 +32,19 @@ public class EduClazzVO implements Serializable {
 	private String entranceYear;
 
 	@Schema(description = "年级id")
-	private Integer gradeId;
+	private String gradeId;
 
 	@Schema(description = "年级")
 	private String gradeName;
 
 	@Schema(description = "学期id")
-	private Long semesterId;
+	private String semesterId;
 
 	@Schema(description = "学期")
 	private String semesterName;
 
 	@Schema(description = "班主任id")
-	private Long headmasterId;
+	private String headmasterId;
 
 	@Schema(description = "班主任")
 	private String headmaster;

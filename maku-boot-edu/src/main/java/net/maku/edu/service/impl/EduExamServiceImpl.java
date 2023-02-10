@@ -82,7 +82,7 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
         List<EduStudentEntity> students = eduStudentService.list(new LambdaQueryWrapper<EduStudentEntity>().in(EduStudentEntity::getClazzId, clazzList));
 
         List<EduExamStudentEntity> entityList = students.stream()
-                .map(stu-> EduExamStudentEntity.builder().examId(vo.getId()).studentId(stu.getId()).clazzId(stu.getClazzId()).build())
+                .map(stu-> new EduExamStudentEntity().setExamId(vo.getId()).setStudentId(stu.getId()))
                 .toList();
 
         entityList.forEach(eduExamStudentEntity -> eduExamStudentDao.insert(eduExamStudentEntity));

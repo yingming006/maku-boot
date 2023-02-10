@@ -1,0 +1,39 @@
+package net.maku.edu.vo;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 字典数据
+ *
+ * @author
+ */
+@Data
+@Schema(description = "全部数据")
+public class SysDictVO {
+    @Schema(description = "字典类型")
+    private String dictType;
+
+    @Schema(description = "字典数据列表")
+    private List<DictData> dataList = new ArrayList<>();
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "字典数据")
+    public static class DictData {
+        @Schema(description = "字典标签")
+        private String dictLabel;
+
+        @Schema(description = "字典值")
+        private String dictValue;
+
+        @Schema(description = "标签样式")
+        private String labelClass;
+    }
+}

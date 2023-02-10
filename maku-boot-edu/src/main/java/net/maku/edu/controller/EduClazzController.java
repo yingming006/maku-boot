@@ -9,6 +9,7 @@ import net.maku.edu.entity.EduClazzEntity;
 import net.maku.edu.query.EduClazzQuery;
 import net.maku.edu.service.EduClazzService;
 import net.maku.edu.vo.EduClazzVO;
+import net.maku.edu.vo.SysDictVO;
 import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.common.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +76,15 @@ public class EduClazzController {
         eduClazzService.delete(idList);
 
         return Result.ok();
+    }
+
+    @GetMapping("/dict")
+    @Operation(summary = "字典查询")
+    @PreAuthorize("hasAuthority('edu:clazz:page')")
+    public Result<PageResult<SysDictVO.DictData>> dict(@Valid EduClazzQuery query) {
+        List<SysDictVO.DictData> list = eduClazzService.getDictData(query);
+
+        PageResult<SysDictVO.DictData> page = new PageResult<>(list, list.size());
+        return Result.ok(page);
     }
 }

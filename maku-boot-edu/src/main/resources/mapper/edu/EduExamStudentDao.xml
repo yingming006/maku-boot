@@ -19,9 +19,9 @@
     </resultMap>
 
     <sql id="baseColumns">
-        est.id,est.exam_id,est.student_id,est.clazz_id,est.examinee_no,est.missed
+        est.id,est.exam_id,est.student_id,est.examinee_no,est.missed
         ,est.total_score,est.clazz_rank,est.grade_rank
-        ,est.deleted,est.version,est.creator,est.create_time,est.updater,est.update_time
+    ,est.deleted,est.version,est.creator,est.create_time,est.updater,est.update_time
     </sql>
 
     <select id="selectAllList" resultType="net.maku.edu.vo.EduExamStudentScoreVO">
@@ -36,7 +36,7 @@
                 AND est.exam_id = #{query.examId}
             </if>
             <if test="query.clazzId != null">
-                AND est.clazz_id = #{query.clazzId}
+                AND stu.clazz_id = #{query.clazzId}
             </if>
             <if test="query.studentId != null">
                 AND est.student_id = #{query.studentId}

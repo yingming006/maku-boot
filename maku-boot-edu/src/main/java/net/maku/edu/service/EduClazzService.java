@@ -1,5 +1,6 @@
 package net.maku.edu.service;
 
+import net.maku.edu.vo.SysDictVO;
 import net.maku.framework.common.utils.PageResult;
 import net.maku.edu.vo.EduClazzVO;
 import net.maku.edu.query.EduClazzQuery;
@@ -40,4 +41,11 @@ public interface EduClazzService extends BaseService<EduClazzEntity> {
      * @param idList
      */
     void delete(List<Long> idList);
+
+    /**
+     * 字典数据
+     * @param query
+     * @return
+     */
+    List<SysDictVO.DictData> getDictData(EduClazzQuery query);
 }

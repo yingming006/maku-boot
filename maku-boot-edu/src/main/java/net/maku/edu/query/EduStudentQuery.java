@@ -15,4 +15,10 @@ import net.maku.framework.common.query.Query;
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "学生信息表查询")
 public class EduStudentQuery extends Query {
+
+    @Schema(description = "年级id")
+    private Long gradeId;
+
+    @Schema(description = "班级id")
+    private Long clazzId;
 }

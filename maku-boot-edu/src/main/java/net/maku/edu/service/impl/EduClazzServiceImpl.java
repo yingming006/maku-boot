@@ -11,6 +11,8 @@ import net.maku.edu.entity.EduClazzEntity;
 import net.maku.edu.query.EduClazzQuery;
 import net.maku.edu.service.EduClazzService;
 import net.maku.edu.vo.EduClazzVO;
+import net.maku.edu.vo.SysDictVO;
+import net.maku.framework.common.exception.ServerException;
 import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
@@ -37,9 +39,9 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
 
     private LambdaQueryWrapper<EduClazzEntity> getWrapper(EduClazzQuery query) {
         LambdaQueryWrapper<EduClazzEntity> wrapper = Wrappers.lambdaQuery();
-        if (StrUtil.isBlank(query.getOrder())) {
-            wrapper.orderByDesc(EduClazzEntity::getEntranceYear);
-        }
+        wrapper.orderByDesc(StrUtil.isBlank(query.getOrder()), EduClazzEntity::getEntranceYear);
+        wrapper.orderByAsc(StrUtil.isBlank(query.getOrder()), EduClazzEntity::getNo);
+        wrapper.eq(query.getGradeId() != null, EduClazzEntity::getGradeId, query.getGradeId());
         return wrapper;
     }
 
@@ -59,6 +61,18 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<Long> idList) {
         removeByIds(idList);
+    }
+
+    @Override
+    public List<SysDictVO.DictData> getDictData(EduClazzQuery query) {
+        if (query.getGradeId() == null) {
+            return null;
+        }
+        try {
+            return baseMapper.getDictData(query);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

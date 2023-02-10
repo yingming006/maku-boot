@@ -15,4 +15,7 @@ import net.maku.framework.common.query.Query;
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "班级信息表查询")
 public class EduClazzQuery extends Query {
+
+    @Schema(description = "年级id")
+    private Long gradeId;
 }

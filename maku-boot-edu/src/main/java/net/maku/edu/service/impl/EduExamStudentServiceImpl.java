@@ -205,7 +205,9 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
         List<EduExamScoreDetail> details = vo.getScoreDetailList();
         for (EduExamScoreDetail detail : details) {
             EduExamScoreEntity entity = new EduExamScoreEntity();
-            entity.setExamId(vo.getExamId());
+            if (vo.getExamId() != null) {
+                entity.setExamId(Long.parseLong(vo.getExamId()));
+            }
             entity.setStudentId(vo.getStudentId());
             entity.setCourseId(detail.getCourseId());
             entity.setScore(detail.getScore());

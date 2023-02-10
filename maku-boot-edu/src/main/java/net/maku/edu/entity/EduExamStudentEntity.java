@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import net.maku.framework.mybatis.entity.BaseEntity;
 
 import java.math.BigDecimal;
@@ -14,10 +15,10 @@ import java.math.BigDecimal;
  * @author yingming006 yingming006@foxmail.com
  * @since 1.0.0 2023-01-28
  */
-@EqualsAndHashCode(callSuper=false)
 @Data
+@Accessors(chain = true)
 @TableName("edu_exam_student")
-@Builder
+@EqualsAndHashCode(callSuper=false)
 public class EduExamStudentEntity extends BaseEntity {
 
 	/**
@@ -29,11 +30,6 @@ public class EduExamStudentEntity extends BaseEntity {
 	* 学生id
 	*/
 	private Long studentId;
-
-	/**
-	 * 班级id
-	 */
-	private Long clazzId;
 
 	/**
 	* 准考证号

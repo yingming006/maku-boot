@@ -18,6 +18,10 @@ import net.maku.framework.mybatis.entity.BaseEntity;
 public class EduClazzEntity extends BaseEntity {
 
 	/**
+	 * 班级编号
+	 */
+	private Long no;
+	/**
 	 * 行政班级
 	 */
 	private String name;

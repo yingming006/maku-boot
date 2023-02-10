@@ -40,4 +40,11 @@ public interface EduStudentService extends BaseService<EduStudentEntity> {
      * @param idList
      */
     void delete(List<Long> idList);
+
+    /**
+     * 获取信息通过id
+     * @param id
+     * @return
+     */
+    EduStudentVO selectById(Long id);
 }

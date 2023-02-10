@@ -31,10 +31,16 @@ public class EduStudentVO implements Serializable {
 	private String gender;
 
 	@Schema(description = "年级id")
-	private Long gradeId;
+	private String gradeId;
+
+	@Schema(description = "年级")
+	private String gradeName;
 
 	@Schema(description = "班级id")
-	private Long clazzId;
+	private String clazzId;
+
+	@Schema(description = "班级")
+	private String clazzName;
 
 	@Schema(description = "是否启用")
 	private Integer isEnabled;

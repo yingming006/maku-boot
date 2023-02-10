@@ -1,6 +1,6 @@
 package net.maku.edu.dao;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import net.maku.edu.entity.EduStudentEntity;
@@ -18,12 +18,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface EduStudentDao extends BaseDao<EduStudentEntity> {
 
-    /**
-     * 分页查询
-     * @param page
-     * @param wrapper
-     * @param query
-     * @return
-     */
-    IPage<EduStudentVO> selectListPage(IPage<EduStudentEntity> page, @Param(Constants.WRAPPER) LambdaQueryWrapper<EduStudentEntity> wrapper);
+    IPage<EduStudentVO> selectAllPage(IPage<EduStudentEntity> page, @Param(Constants.WRAPPER) QueryWrapper<EduStudentEntity> wrapper);
+
+    EduStudentVO selectById(@Param("id") Long id);
 }

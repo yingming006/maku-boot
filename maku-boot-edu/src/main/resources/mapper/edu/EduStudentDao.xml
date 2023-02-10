@@ -8,6 +8,7 @@
         <result property="no" column="no"/>
         <result property="name" column="name"/>
         <result property="gender" column="gender"/>
+        <result property="gradeId" column="grade_id"/>
         <result property="clazzId" column="clazz_id"/>
         <result property="isEnabled" column="is_enabled"/>
         <result property="deleted" column="deleted"/>
@@ -18,17 +19,30 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-    <sql id="stuColumns">
-        stu.id,stu.no,stu.name,stu.gender,stu.clazz_id,stu.clazz_id,stu.is_enabled
+    <sql id="baseColumnList">
+        stu.id,stu.no,stu.name,stu.gender,stu.clazz_id,stu.is_enabled
         ,stu.deleted,stu.version,stu.creator,stu.create_time,stu.updater,stu.update_time
     </sql>
 
-    <select id="selectListPage" resultType="net.maku.edu.vo.EduStudentVO">
-        select
-        <include refid="stuColumns"/>
-        , cla.grade_id
-        from edu_student stu
-        left join edu_clazz cla on stu.clazz_id = cla.id
+    <select id="selectAllPage" resultType="net.maku.edu.vo.EduStudentVO">
+        SELECT * FROM (
+            SELECT
+                <include refid="baseColumnList"/>
+                ,cla.name AS clazz_name,gra.id as grade_id,gra.name AS grade_name
+            FROM edu_student stu
+            LEFT JOIN edu_clazz cla ON stu.clazz_id = cla.id
+            LEFT JOIN edu_grade gra ON cla.grade_id = gra.id
+        ) AS result
         ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectById" resultType="net.maku.edu.vo.EduStudentVO">
+        SELECT
+            <include refid="baseColumnList"/>
+            ,cla.name AS clazz_name,gra.id as grade_id,gra.name AS grade_name
+        FROM edu_student stu
+        LEFT JOIN edu_clazz cla ON stu.clazz_id = cla.id
+        LEFT JOIN edu_grade gra ON cla.grade_id = gra.id
+        WHERE stu.id = #{id}
     </select>
 </mapper>

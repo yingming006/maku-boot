@@ -1,9 +1,11 @@
 package net.maku.edu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AllArgsConstructor;
+import net.maku.edu.entity.EduGradeEntity;
 import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import net.maku.edu.convert.EduStudentConvert;
@@ -29,15 +31,15 @@ public class EduStudentServiceImpl extends BaseServiceImpl<EduStudentDao, EduStu
 
     @Override
     public PageResult<EduStudentVO> page(EduStudentQuery query) {
-        IPage<EduStudentVO> page = baseMapper.selectListPage(getPage(query), getWrapper(query));
-        Long total = baseMapper.selectCount(getWrapper(query));
+        IPage<EduStudentVO> page = baseMapper.selectAllPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(page.getRecords(), total);
+        return new PageResult<>(page.getRecords(), page.getTotal());
     }
 
-    private LambdaQueryWrapper<EduStudentEntity> getWrapper(EduStudentQuery query) {
-        LambdaQueryWrapper<EduStudentEntity> wrapper = Wrappers.lambdaQuery();
-
+    private QueryWrapper<EduStudentEntity> getWrapper(EduStudentQuery query) {
+        QueryWrapper<EduStudentEntity> wrapper = Wrappers.query();
+        wrapper.eq(query.getGradeId() != null, "gra.id", query.getGradeId());
+        wrapper.eq(query.getClazzId() != null, "stu.clazz_id", query.getClazzId());
         return wrapper;
     }
 
@@ -59,6 +61,11 @@ public class EduStudentServiceImpl extends BaseServiceImpl<EduStudentDao, EduStu
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<Long> idList) {
         removeByIds(idList);
+    }
+
+    @Override
+    public EduStudentVO selectById(Long id) {
+        return baseMapper.selectById(id);
     }
 
 }

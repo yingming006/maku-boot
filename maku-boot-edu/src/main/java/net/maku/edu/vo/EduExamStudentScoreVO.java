@@ -20,7 +20,7 @@ public class EduExamStudentScoreVO implements Serializable {
 	private Long id;
 
 	@Schema(description = "考试id")
-	private Long examId;
+	private String examId;
 
 	@Schema(description = "学生id")
 	private Long studentId;
@@ -32,7 +32,7 @@ public class EduExamStudentScoreVO implements Serializable {
 	private String studentName;
 
 	@Schema(description = "班级id")
-	private Long clazzId;
+	private String clazzId;
 
 	@Schema(description = "是否缺考")
 	private Integer missed;

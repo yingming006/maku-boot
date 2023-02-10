@@ -45,9 +45,9 @@ public class EduStudentController {
     @Operation(summary = "信息")
     @PreAuthorize("hasAuthority('edu:student:info')")
     public Result<EduStudentVO> get(@PathVariable("id") Long id){
-        EduStudentEntity entity = eduStudentService.getById(id);
+        EduStudentVO entity = eduStudentService.selectById(id);
 
-        return Result.ok(EduStudentConvert.INSTANCE.convert(entity));
+        return Result.ok(entity);
     }
 
     @PostMapping
