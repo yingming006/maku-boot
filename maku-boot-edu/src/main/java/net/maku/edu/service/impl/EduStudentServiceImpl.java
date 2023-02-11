@@ -38,8 +38,8 @@ public class EduStudentServiceImpl extends BaseServiceImpl<EduStudentDao, EduStu
 
     private QueryWrapper<EduStudentEntity> getWrapper(EduStudentQuery query) {
         QueryWrapper<EduStudentEntity> wrapper = Wrappers.query();
-        wrapper.eq(query.getGradeId() != null, "gra.id", query.getGradeId());
-        wrapper.eq(query.getClazzId() != null, "stu.clazz_id", query.getClazzId());
+        wrapper.eq(query.getGradeId() != null, "id", query.getGradeId());
+        wrapper.eq(query.getClazzId() != null, "clazz_id", query.getClazzId());
         return wrapper;
     }
 

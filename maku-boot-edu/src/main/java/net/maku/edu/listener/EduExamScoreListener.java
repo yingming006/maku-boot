@@ -1,5 +1,6 @@
 package net.maku.edu.listener;
 
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -7,21 +8,26 @@ import com.alibaba.excel.util.ListUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fhs.trans.service.impl.DictionaryTransService;
 import lombok.Setter;
+import net.maku.edu.convert.EduExamStudentConvert;
 import net.maku.edu.entity.EduExamScoreEntity;
 import net.maku.edu.entity.EduExamStudentEntity;
 import net.maku.edu.entity.EduStudentEntity;
+import net.maku.edu.query.EduExamQuery;
+import net.maku.edu.query.EduExamStudentQuery;
+import net.maku.edu.service.EduExamClazzService;
 import net.maku.edu.service.EduExamScoreService;
 import net.maku.edu.service.EduExamStudentService;
 import net.maku.edu.service.EduStudentService;
+import net.maku.edu.vo.EduExamClazzVO;
+import net.maku.edu.vo.EduExamStudentVO;
 import net.maku.framework.common.constant.Constant;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author yingming006
@@ -41,13 +47,15 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
     private final EduExamScoreService eduExamScoreService;
     private final EduExamStudentService eduExamStudentService;
     private final EduStudentService eduStudentService;
+    private final EduExamClazzService eduExamClazzService;
 
     private Long examId;
 
-    public EduExamScoreListener(EduExamScoreService eduExamScoreService, EduExamStudentService eduExamStudentService, EduStudentService eduStudentService) {
+    public EduExamScoreListener(EduExamScoreService eduExamScoreService, EduExamStudentService eduExamStudentService, EduStudentService eduStudentService, EduExamClazzService eduExamClazzService) {
         this.eduExamScoreService = eduExamScoreService;
         this.eduExamStudentService = eduExamStudentService;
         this.eduStudentService = eduStudentService;
+        this.eduExamClazzService = eduExamClazzService;
     }
 
     @Override
@@ -85,15 +93,39 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
      * 计算总成绩
      */
     private void calcScore() {
-        List<EduExamStudentEntity> list = eduExamStudentService.list(new LambdaQueryWrapper<EduExamStudentEntity>().eq(EduExamStudentEntity::getExamId, this.examId));
+        List<EduExamStudentVO> list = eduExamStudentService.selectAllList(new EduExamStudentQuery().setExamId(this.examId));
 
-        list.forEach(entity -> {
-            List<EduExamScoreEntity> scores = eduExamScoreService.list(new LambdaQueryWrapper<EduExamScoreEntity>().eq(EduExamScoreEntity::getExamId, entity.getExamId()).eq(EduExamScoreEntity::getStudentId, entity.getStudentId()));
+        list.forEach(vo -> {
+            List<EduExamScoreEntity> scores = eduExamScoreService.list(new LambdaQueryWrapper<EduExamScoreEntity>().eq(EduExamScoreEntity::getExamId, vo.getExamId()).eq(EduExamScoreEntity::getStudentId, vo.getStudentId()));
             BigDecimal totalScore = scores.stream().map(EduExamScoreEntity::getScore).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
-            entity.setTotalScore(totalScore);
+            vo.setTotalScore(totalScore);
         });
 
-        eduExamStudentService.updateBatchById(list);
+        EduExamClazzVO examClazzVO = eduExamClazzService.selectIds(new EduExamQuery().setId(this.examId));
+
+        // 年级排名
+        AtomicInteger gradeRank = new AtomicInteger(1);
+        examClazzVO.getGradeIds().forEach(gradeId -> {
+            list.stream()
+                    .filter(vo -> NumberUtil.equals(vo.getGradeId(), gradeId))
+                    .sorted(Comparator.comparing(EduExamStudentVO::getTotalScore).reversed())
+                    .forEach(vo -> vo.setGradeRank(gradeRank.getAndIncrement()));
+            gradeRank.set(1);
+        });
+
+        // 班级排名
+        AtomicInteger clazzRank = new AtomicInteger(1);
+        examClazzVO.getClazzIds().forEach(clazzId -> {
+            list.stream()
+                    .filter(vo -> NumberUtil.equals(vo.getClazzId(), clazzId))
+                    .sorted(Comparator.comparing(EduExamStudentVO::getTotalScore).reversed())
+                    .forEach(vo -> vo.setClazzRank(clazzRank.getAndIncrement()));
+            clazzRank.set(1);
+        });
+
+        List<EduExamStudentEntity> result = EduExamStudentConvert.INSTANCE.convertToList(list);
+
+        eduExamStudentService.updateBatchById(result);
     }
 
     private void initHeadMap() {

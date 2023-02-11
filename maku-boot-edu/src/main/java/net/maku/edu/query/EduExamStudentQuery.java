@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import net.maku.framework.common.query.Query;
 
 /**
@@ -14,6 +15,7 @@ import net.maku.framework.common.query.Query;
 */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 @Schema(description = "考试学生信息查询")
 public class EduExamStudentQuery extends Query {
 

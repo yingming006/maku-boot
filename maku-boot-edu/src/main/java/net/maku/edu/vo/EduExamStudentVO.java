@@ -29,6 +29,18 @@ public class EduExamStudentVO implements Serializable {
 	@Schema(description = "学生id")
 	private Long studentId;
 
+	@Schema(description = "学生学号")
+	private Long studentNo;
+
+	@Schema(description = "学生姓名")
+	private String studentName;
+
+	@Schema(description = "年级id")
+	private Long gradeId;
+
+	@Schema(description = "班级id")
+	private Long clazzId;
+
 	@Schema(description = "准考证号")
 	private Long examineeNo;
 
@@ -66,6 +78,4 @@ public class EduExamStudentVO implements Serializable {
 	@Schema(description = "更新时间")
 	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
 	private Date updateTime;
-
-
 }

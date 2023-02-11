@@ -23,4 +23,6 @@ public interface EduExamStudentConvert {
 
     List<EduExamStudentVO> convertList(List<EduExamStudentEntity> list);
 
+    List<EduExamStudentEntity> convertToList(List<EduExamStudentVO> list);
+
 }

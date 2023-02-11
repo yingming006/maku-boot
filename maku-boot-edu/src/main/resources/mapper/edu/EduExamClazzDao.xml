@@ -8,4 +8,16 @@
         <result property="clazzId" column="clazz_id"/>
     </resultMap>
 
+    <sql id="baseColumns">
+        est.id,est.exam_id,est.student_id,est.examinee_no,est.missed
+        ,est.total_score,est.clazz_rank,est.grade_rank
+    ,est.deleted,est.version,est.creator,est.create_time,est.updater,est.update_time
+    </sql>
+
+    <select id="selectIds" resultType="net.maku.edu.vo.EduExamClazzVO">
+        SELECT eec.exam_id, eec.clazz_id, cla.grade_id
+        FROM edu_exam_clazz eec
+        LEFT JOIN edu_clazz cla ON eec.clazz_id = cla.id
+        WHERE eec.exam_id = #{query.id}
+    </select>
 </mapper>

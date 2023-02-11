@@ -8,7 +8,6 @@
         <result property="no" column="no"/>
         <result property="name" column="name"/>
         <result property="gender" column="gender"/>
-        <result property="gradeId" column="grade_id"/>
         <result property="clazzId" column="clazz_id"/>
         <result property="isEnabled" column="is_enabled"/>
         <result property="deleted" column="deleted"/>
@@ -19,7 +18,7 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-    <sql id="baseColumnList">
+    <sql id="baseColumns">
         stu.id,stu.no,stu.name,stu.gender,stu.clazz_id,stu.is_enabled
         ,stu.deleted,stu.version,stu.creator,stu.create_time,stu.updater,stu.update_time
     </sql>
@@ -27,7 +26,7 @@
     <select id="selectAllPage" resultType="net.maku.edu.vo.EduStudentVO">
         SELECT * FROM (
             SELECT
-                <include refid="baseColumnList"/>
+                <include refid="baseColumns"/>
                 ,cla.name AS clazz_name,gra.id as grade_id,gra.name AS grade_name
             FROM edu_student stu
             LEFT JOIN edu_clazz cla ON stu.clazz_id = cla.id
@@ -38,7 +37,7 @@
 
     <select id="selectById" resultType="net.maku.edu.vo.EduStudentVO">
         SELECT
-            <include refid="baseColumnList"/>
+            <include refid="baseColumns"/>
             ,cla.name AS clazz_name,gra.id as grade_id,gra.name AS grade_name
         FROM edu_student stu
         LEFT JOIN edu_clazz cla ON stu.clazz_id = cla.id

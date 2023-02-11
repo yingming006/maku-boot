@@ -21,30 +21,18 @@
     <sql id="baseColumns">
         est.id,est.exam_id,est.student_id,est.examinee_no,est.missed
         ,est.total_score,est.clazz_rank,est.grade_rank
-    ,est.deleted,est.version,est.creator,est.create_time,est.updater,est.update_time
+        ,est.deleted,est.version,est.creator,est.create_time,est.updater,est.update_time
     </sql>
 
-    <select id="selectAllList" resultType="net.maku.edu.vo.EduExamStudentScoreVO">
-        SELECT
-        <include refid="baseColumns"/>
-        ,stu.no AS student_no,stu.name AS student_name, stu.clazz_id
-        FROM edu_exam_student est
-        LEFT JOIN edu_student stu ON est.student_id = stu.id
-        <where>
-            est.deleted = 0
-            <if test="query.examId != null">
-                AND est.exam_id = #{query.examId}
-            </if>
-            <if test="query.clazzId != null">
-                AND stu.clazz_id = #{query.clazzId}
-            </if>
-            <if test="query.studentId != null">
-                AND est.student_id = #{query.studentId}
-            </if>
-            <if test="query.id != null">
-                AND est.id = #{query.id}
-            </if>
-        </where>
+    <select id="selectAllList" resultType="net.maku.edu.vo.EduExamStudentVO">
+        SELECT * FROM (
+            SELECT
+                <include refid="baseColumns"/>
+                ,stu.no AS student_no,stu.name AS student_name,stu.clazz_id,cla.grade_id
+            FROM edu_exam_student est
+            LEFT JOIN edu_student stu ON est.student_id = stu.id
+            LEFT JOIN edu_clazz cla ON stu.clazz_id = cla.id
+        ) AS result
         ${ew.customSqlSegment}
     </select>
 

@@ -76,4 +76,6 @@ public interface EduExamStudentService extends BaseService<EduExamStudentEntity>
      * @return
      */
     PageResult<EduExamStudentScoreVO> pageWithoutScore(EduExamStudentQuery query);
+
+    List<EduExamStudentVO> selectAllList(EduExamStudentQuery query);
 }

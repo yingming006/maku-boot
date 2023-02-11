@@ -82,9 +82,15 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
             cId = "";
         }
 
-        IPage<EduExamStudentScoreVO> page = baseMapper.selectAllList(getPage(query), getWrapper(query), query);
+        IPage<EduExamStudentVO> page = baseMapper.selectAllList(getPage(query), getWrapper(query));
 
-        List<EduExamStudentScoreVO> list = page.getRecords();
+        IPage<EduExamStudentScoreVO> result = page.convert(studentVO->{
+            EduExamStudentScoreVO newVO = new EduExamStudentScoreVO();
+            BeanUtils.copyProperties(studentVO, newVO);
+            return newVO;
+        });
+
+        List<EduExamStudentScoreVO> list = result.getRecords();
 
         list.forEach(vo -> {
             if (vo.getMissed() == null || vo.getMissed() != 1) {
@@ -127,15 +133,15 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
         EduExamStudentQuery query = new EduExamStudentQuery();
         query.setId(id);
         query.setSearchCount(false);
-        IPage<EduExamStudentScoreVO> entity = baseMapper.selectAllList(getPage(query), getWrapper(query), query);
+        IPage<EduExamStudentVO> page = baseMapper.selectAllList(getPage(query), getWrapper(query));
 
-        if (entity.getRecords().isEmpty()) {
+        if (page.getRecords().isEmpty()) {
             throw new ServerException("找不到该学生考试信息");
         }
 
         EduExamStudentScoreVO result = new EduExamStudentScoreVO();
 
-        BeanUtils.copyProperties(entity.getRecords().get(0), result);
+        BeanUtils.copyProperties(page.getRecords().get(0), result);
 
         if (result.getMissed() == null || result.getMissed() != 1) {
             List<EduExamScoreEntity> scoreList = eduExamScoreService.list(new LambdaQueryWrapper<EduExamScoreEntity>()
@@ -155,14 +161,19 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
         return Result.ok(result);
     }
 
-    private LambdaQueryWrapper<EduExamStudentEntity> getWrapper(EduExamStudentQuery query) {
-        LambdaQueryWrapper<EduExamStudentEntity> wrapper = Wrappers.lambdaQuery();
+    private QueryWrapper<EduExamStudentEntity> getWrapper(EduExamStudentQuery query) {
+        QueryWrapper<EduExamStudentEntity> wrapper = Wrappers.query();
 
         // 默认学号升序
         if (StrUtil.isBlank(query.getOrder()) || StrUtil.equals(query.getOrder(), Constant.STUDENT_NO)) {
             query.setOrder(Constant.STUDENT_NO);
             query.setAsc(true);
         }
+
+        wrapper.eq(query.getExamId() != null, "exam_id", query.getExamId());
+        wrapper.eq(query.getClazzId() != null, "clazz_id", query.getClazzId());
+        wrapper.eq(query.getStudentId() != null, "student_id", query.getStudentId());
+        wrapper.eq(query.getId() != null, "id", query.getId());
 
         return wrapper;
     }
@@ -206,7 +217,7 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
         for (EduExamScoreDetail detail : details) {
             EduExamScoreEntity entity = new EduExamScoreEntity();
             if (vo.getExamId() != null) {
-                entity.setExamId(Long.parseLong(vo.getExamId()));
+                entity.setExamId(vo.getExamId());
             }
             entity.setStudentId(vo.getStudentId());
             entity.setCourseId(detail.getCourseId());
@@ -246,9 +257,15 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
     @Override
     public PageResult<EduExamStudentScoreVO> pageWithoutScore(EduExamStudentQuery query) {
         query.setSearchCount(false);
-        IPage<EduExamStudentScoreVO> page = baseMapper.selectAllList(getPage(query), getWrapper(query), query);
+        IPage<EduExamStudentVO> page = baseMapper.selectAllList(getPage(query), getWrapper(query));
 
-        List<EduExamStudentScoreVO> list = page.getRecords();
+        IPage<EduExamStudentScoreVO> result = page.convert(studentVO->{
+            EduExamStudentScoreVO newVO = new EduExamStudentScoreVO();
+            BeanUtils.copyProperties(studentVO, newVO);
+            return newVO;
+        });
+
+        List<EduExamStudentScoreVO> list = result.getRecords();
         list.forEach(vo -> {
             if (vo.getMissed() == null || vo.getMissed() != 1) {
                 List<EduExamScoreEntity> scoreList = eduExamScoreService.list(new LambdaQueryWrapper<EduExamScoreEntity>()
@@ -267,8 +284,18 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
             }
         });
 
-
         return new PageResult<>(list, 0);
+    }
+
+    @Override
+    public List<EduExamStudentVO> selectAllList(EduExamStudentQuery query) {
+
+        query.setPage(1);
+        query.setLimit(Integer.MAX_VALUE);
+        query.setSearchCount(false);
+        IPage<EduExamStudentVO> page = baseMapper.selectAllList(getPage(query), getWrapper(query));
+
+        return page.getRecords();
     }
 
     /**

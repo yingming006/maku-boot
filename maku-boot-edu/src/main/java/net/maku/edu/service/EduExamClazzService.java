@@ -2,6 +2,8 @@ package net.maku.edu.service;
 
 import net.maku.edu.entity.EduExamClazzEntity;
 import net.maku.edu.query.EduExamQuery;
+import net.maku.edu.vo.EduExamClazzVO;
+import net.maku.edu.vo.EduExamVO;
 import net.maku.framework.mybatis.service.BaseService;
 
 import java.util.List;
@@ -20,4 +22,11 @@ public interface EduExamClazzService extends BaseService<EduExamClazzEntity> {
      * @return
      */
     List<EduExamClazzEntity> list(EduExamQuery query);
+
+    /**
+     * 查询考试关联id
+     * @param query
+     * @return
+     */
+    EduExamClazzVO selectIds(EduExamQuery query);
 }

@@ -7,11 +7,13 @@ import net.maku.edu.dao.EduExamClazzDao;
 import net.maku.edu.entity.EduExamClazzEntity;
 import net.maku.edu.query.EduExamQuery;
 import net.maku.edu.service.EduExamClazzService;
+import net.maku.edu.vo.EduExamClazzVO;
+import net.maku.edu.vo.EduExamVO;
 import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 考试班级信息表
@@ -29,6 +31,29 @@ public class EduExamClazzServiceImpl extends BaseServiceImpl<EduExamClazzDao, Ed
             return new ArrayList<>();
         }
         return baseMapper.selectList(getWrapper(query));
+    }
+
+    @Override
+    public EduExamClazzVO selectIds(EduExamQuery query) {
+
+        EduExamClazzVO result = new EduExamClazzVO();
+
+        if (query.getId() == null) {
+            return result;
+        }
+
+        List<EduExamClazzEntity> entities = baseMapper.selectList(new LambdaQueryWrapper<EduExamClazzEntity>().eq(EduExamClazzEntity::getExamId, query.getId()));
+
+        List<EduExamClazzVO> list = baseMapper.selectIds(query);
+
+
+        List<Long> gradeIds = list.stream().map(EduExamClazzVO::getGradeId).distinct().toList();
+        List<Long> clazzIds = list.stream().map(EduExamClazzVO::getClazzId).distinct().toList();
+
+        result.setGradeIds(gradeIds);
+        result.setClazzIds(clazzIds);
+
+        return result;
     }
 
 

@@ -1,8 +1,13 @@
 package net.maku.edu.dao;
 
 import net.maku.edu.entity.EduExamClazzEntity;
+import net.maku.edu.query.EduExamQuery;
+import net.maku.edu.vo.EduExamClazzVO;
 import net.maku.framework.mybatis.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * 考试班级信息表
@@ -12,5 +17,7 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface EduExamClazzDao extends BaseDao<EduExamClazzEntity> {
+
+     List<EduExamClazzVO> selectIds(@Param("query") EduExamQuery query);
 
 }
