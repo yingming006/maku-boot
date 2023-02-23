@@ -14,6 +14,7 @@ import net.maku.edu.query.EduStudentQuery;
 import net.maku.edu.vo.EduStudentVO;
 import net.maku.edu.dao.EduStudentDao;
 import net.maku.edu.service.EduStudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,9 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class EduStudentServiceImpl extends BaseServiceImpl<EduStudentDao, EduStudentEntity> implements EduStudentService {
+
+    @Autowired
+    private EduStudentConvert eduStudentConvert;
 
     @Override
     public PageResult<EduStudentVO> page(EduStudentQuery query) {
@@ -45,14 +49,14 @@ public class EduStudentServiceImpl extends BaseServiceImpl<EduStudentDao, EduStu
 
     @Override
     public void save(EduStudentVO vo) {
-        EduStudentEntity entity = EduStudentConvert.INSTANCE.convert(vo);
+        EduStudentEntity entity = eduStudentConvert.convert(vo);
 
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduStudentVO vo) {
-        EduStudentEntity entity = EduStudentConvert.INSTANCE.convert(vo);
+        EduStudentEntity entity = eduStudentConvert.convert(vo);
 
         updateById(entity);
     }

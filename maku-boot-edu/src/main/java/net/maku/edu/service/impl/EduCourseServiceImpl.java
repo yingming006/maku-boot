@@ -12,6 +12,7 @@ import net.maku.edu.query.EduCourseQuery;
 import net.maku.edu.vo.EduCourseVO;
 import net.maku.edu.dao.EduCourseDao;
 import net.maku.edu.service.EduCourseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +27,15 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class EduCourseServiceImpl extends BaseServiceImpl<EduCourseDao, EduCourseEntity> implements EduCourseService {
+    
+    @Autowired
+    private EduCourseConvert eduCourseConvert;
 
     @Override
     public PageResult<EduCourseVO> page(EduCourseQuery query) {
         IPage<EduCourseEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(EduCourseConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        return new PageResult<>(eduCourseConvert.convertList(page.getRecords()), page.getTotal());
     }
 
     private LambdaQueryWrapper<EduCourseEntity> getWrapper(EduCourseQuery query){
@@ -42,14 +46,14 @@ public class EduCourseServiceImpl extends BaseServiceImpl<EduCourseDao, EduCours
 
     @Override
     public void save(EduCourseVO vo) {
-        EduCourseEntity entity = EduCourseConvert.INSTANCE.convert(vo);
+        EduCourseEntity entity = eduCourseConvert.convert(vo);
 
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduCourseVO vo) {
-        EduCourseEntity entity = EduCourseConvert.INSTANCE.convert(vo);
+        EduCourseEntity entity = eduCourseConvert.convert(vo);
 
         updateById(entity);
     }

@@ -32,6 +32,9 @@ public class EduTeacherController {
     @Autowired
     private EduTeacherService eduTeacherService;
 
+    @Autowired
+    private EduTeacherConvert eduTeacherConvert;
+
     @GetMapping("page")
     @Operation(summary = "分页")
     @PreAuthorize("hasAuthority('edu:teacher:page')")
@@ -47,7 +50,7 @@ public class EduTeacherController {
     public Result<EduTeacherVO> get(@PathVariable("id") Long id){
         EduTeacherEntity entity = eduTeacherService.getById(id);
 
-        return Result.ok(EduTeacherConvert.INSTANCE.convert(entity));
+        return Result.ok(eduTeacherConvert.convert(entity));
     }
 
     @PostMapping

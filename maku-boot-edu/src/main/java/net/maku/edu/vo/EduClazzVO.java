@@ -3,10 +3,12 @@ package net.maku.edu.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import net.maku.framework.common.utils.DateUtils;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
 * 班级信息表
@@ -49,8 +51,8 @@ public class EduClazzVO implements Serializable {
 	@Schema(description = "班主任")
 	private String headmaster;
 
-	@Schema(description = "开设课程")
-	private String courseList;
+	@Schema(description = "开设课程及授课老师")
+	private List<EduClazzDetailVO> details;
 
 	@Schema(description = "是否启用")
 	private Integer isEnabled;
@@ -74,5 +76,4 @@ public class EduClazzVO implements Serializable {
 	@Schema(description = "更新时间")
 	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
 	private Date updateTime;
-
 }

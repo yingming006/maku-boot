@@ -10,6 +10,7 @@ import net.maku.edu.query.EduExamQuery;
 import net.maku.edu.service.EduExamCourseService;
 import net.maku.edu.vo.EduExamCourseVO;
 import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ import java.util.List;
 @AllArgsConstructor
 public class EduExamCourseServiceImpl extends BaseServiceImpl<EduExamCourseDao, EduExamCourseEntity> implements EduExamCourseService {
 
+    @Autowired
+    private EduExamCourseConvert eduExamCourseConvert;
+
     @Override
     public List<EduExamCourseEntity> list(EduExamQuery query) {
         if (null == query.getId()) {
@@ -36,14 +40,14 @@ public class EduExamCourseServiceImpl extends BaseServiceImpl<EduExamCourseDao, 
 
     @Override
     public void save(EduExamCourseVO vo) {
-        EduExamCourseEntity entity = EduExamCourseConvert.INSTANCE.convert(vo);
+        EduExamCourseEntity entity = eduExamCourseConvert.convert(vo);
 
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduExamCourseVO vo) {
-        EduExamCourseEntity entity = EduExamCourseConvert.INSTANCE.convert(vo);
+        EduExamCourseEntity entity = eduExamCourseConvert.convert(vo);
 
         updateById(entity);
     }

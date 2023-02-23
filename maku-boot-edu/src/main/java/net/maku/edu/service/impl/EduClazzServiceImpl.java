@@ -2,19 +2,24 @@ package net.maku.edu.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.AllArgsConstructor;
 import net.maku.edu.convert.EduClazzConvert;
+import net.maku.edu.dao.EduClazzCourseTeacherDao;
 import net.maku.edu.dao.EduClazzDao;
+import net.maku.edu.entity.EduClazzCourseTeacherEntity;
 import net.maku.edu.entity.EduClazzEntity;
 import net.maku.edu.query.EduClazzQuery;
+import net.maku.edu.service.EduClazzCourseTeacherService;
 import net.maku.edu.service.EduClazzService;
+import net.maku.edu.vo.EduClazzDetailVO;
 import net.maku.edu.vo.EduClazzVO;
 import net.maku.edu.vo.SysDictVO;
-import net.maku.framework.common.exception.ServerException;
 import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +35,16 @@ import java.util.List;
 @AllArgsConstructor
 public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEntity> implements EduClazzService {
 
+    @Autowired
+    private EduClazzConvert eduClazzConvert;
+    @Autowired
+    private EduClazzCourseTeacherDao eduClazzCourseTeacherDao;
+
     @Override
     public PageResult<EduClazzVO> page(EduClazzQuery query) {
         IPage<EduClazzEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(EduClazzConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        return new PageResult<>(eduClazzConvert.convertList(page.getRecords()), page.getTotal());
     }
 
     private LambdaQueryWrapper<EduClazzEntity> getWrapper(EduClazzQuery query) {
@@ -47,13 +57,13 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
 
     @Override
     public void save(EduClazzVO vo) {
-        EduClazzEntity entity = EduClazzConvert.INSTANCE.convert(vo);
+        EduClazzEntity entity = eduClazzConvert.convert(vo);
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduClazzVO vo) {
-        EduClazzEntity entity = EduClazzConvert.INSTANCE.convert(vo);
+        EduClazzEntity entity = eduClazzConvert.convert(vo);
         updateById(entity);
     }
 
@@ -73,6 +83,14 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public EduClazzVO detail(Long id) {
+        EduClazzVO vo = baseMapper.selectVOById(id);
+        List<EduClazzDetailVO> details = eduClazzCourseTeacherDao.detail(new QueryWrapper<EduClazzCourseTeacherEntity>().eq("clazz_id", id));
+        vo.setDetails(details);
+        return vo;
     }
 
 }

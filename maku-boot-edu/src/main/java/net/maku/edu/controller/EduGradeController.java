@@ -32,6 +32,9 @@ public class EduGradeController {
     @Autowired
     private EduGradeService eduGradeService;
 
+    @Autowired
+    private EduGradeConvert eduGradeConvert;
+
     @GetMapping("page")
     @Operation(summary = "分页")
     @PreAuthorize("hasAuthority('edu:grade:page')")
@@ -47,7 +50,7 @@ public class EduGradeController {
     public Result<EduGradeVO> get(@PathVariable("id") Long id){
         EduGradeEntity entity = eduGradeService.getById(id);
 
-        return Result.ok(EduGradeConvert.INSTANCE.convert(entity));
+        return Result.ok(eduGradeConvert.convert(entity));
     }
 
     @PostMapping

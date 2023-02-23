@@ -13,6 +13,7 @@ import net.maku.edu.service.EduSemesterService;
 import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import net.maku.edu.vo.EduSemesterVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,11 +29,14 @@ import java.util.List;
 @AllArgsConstructor
 public class EduSemesterServiceImpl extends BaseServiceImpl<EduSemesterDao, EduSemesterEntity> implements EduSemesterService {
 
+    @Autowired
+    private EduSemesterConvert eduSemesterConvert;
+
     @Override
     public PageResult<EduSemesterVO> page(EduSemesterQuery query) {
         IPage<EduSemesterEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(EduSemesterConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        return new PageResult<>(eduSemesterConvert.convertList(page.getRecords()), page.getTotal());
     }
 
     private LambdaQueryWrapper<EduSemesterEntity> getWrapper(EduSemesterQuery query){
@@ -45,14 +49,14 @@ public class EduSemesterServiceImpl extends BaseServiceImpl<EduSemesterDao, EduS
 
     @Override
     public void save(EduSemesterVO vo) {
-        EduSemesterEntity entity = EduSemesterConvert.INSTANCE.convert(vo);
+        EduSemesterEntity entity = eduSemesterConvert.convert(vo);
 
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduSemesterVO vo) {
-        EduSemesterEntity entity = EduSemesterConvert.INSTANCE.convert(vo);
+        EduSemesterEntity entity = eduSemesterConvert.convert(vo);
 
         updateById(entity);
     }

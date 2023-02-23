@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.maku.edu.dao.EduClazzCourseTeacherDao">
+
+    <resultMap type="net.maku.edu.entity.EduClazzCourseTeacherEntity" id="eduClazzCourseTeacherMap">
+        <result property="teacherId" column="teacher_id"/>
+        <result property="clazzId" column="clazz_id"/>
+        <result property="courseId" column="course_id"/>
+    </resultMap>
+
+    <select id="detail" resultType="net.maku.edu.vo.EduClazzDetailVO">
+        SELECT *
+        FROM (SELECT cst.clazz_id,cst.course_id,cst.teacher_id,cla.name AS clazzName,cou.name AS courseName,tea.name AS teacherName
+              FROM edu_clazz_course_teacher cst
+                       LEFT JOIN edu_clazz cla ON cst.clazz_id = cla.id
+                       LEFT JOIN edu_course cou ON cst.course_id = cou.id
+                       LEFT JOIN edu_teacher tea ON cst.teacher_id = tea.id
+              ) AS result ${ew.customSqlSegment}
+    </select>
+</mapper>

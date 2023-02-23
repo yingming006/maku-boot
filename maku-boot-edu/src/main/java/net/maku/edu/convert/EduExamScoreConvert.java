@@ -13,9 +13,8 @@ import java.util.List;
 * @author yingming006 yingming006@foxmail.com
 * @since 1.0.0 2022-12-15
 */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EduExamScoreConvert {
-    EduExamScoreConvert INSTANCE = Mappers.getMapper(EduExamScoreConvert.class);
 
     EduExamScoreEntity convert(EduExamScoreVO vo);
 

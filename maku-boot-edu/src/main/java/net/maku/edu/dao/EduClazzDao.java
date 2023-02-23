@@ -1,7 +1,9 @@
 package net.maku.edu.dao;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import net.maku.edu.entity.EduClazzEntity;
 import net.maku.edu.query.EduClazzQuery;
+import net.maku.edu.vo.EduClazzVO;
 import net.maku.edu.vo.SysDictVO;
 import net.maku.framework.mybatis.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,4 +28,6 @@ public interface EduClazzDao extends BaseDao<EduClazzEntity> {
             "AND c.grade_id = #{query.gradeId}\n" +
             "ORDER BY c.entrance_year DESC")
     List<SysDictVO.DictData> getDictData(@Param("query") EduClazzQuery query);
+
+    EduClazzVO selectVOById(Long id);
 }

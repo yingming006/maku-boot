@@ -2,8 +2,12 @@ package net.maku.edu.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.io.Serializable;
+
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import net.maku.framework.common.utils.DateUtils;
 import java.util.Date;
 import java.util.List;
@@ -40,10 +44,7 @@ public class EduExamVO implements Serializable {
 	private List<String> clazzList;
 
 	@Schema(description = "考试课程")
-	private List<String> courseList;
-
-	@Schema(description = "考试课程满分")
-	private List<String> courseFullScoreList;
+	private List<EduExamVO.ExamCourse> courseList;
 
 	@Schema(description = "备注")
 	private String remark;
@@ -71,5 +72,14 @@ public class EduExamVO implements Serializable {
 	@JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
 	private Date updateTime;
 
+	@Data
+	@Accessors(chain = true)
+	@Schema(description = "考试课程")
+	public static class ExamCourse {
+		@Schema(description = "课程id")
+		private String id;
 
+		@Schema(description = "满分")
+		private String fullScore;
+	}
 }

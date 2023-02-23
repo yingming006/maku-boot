@@ -47,11 +47,6 @@ public class EduClazzEntity extends BaseEntity {
 	private Long headmasterId;
 
 	/**
-	 * 开设课程
-	 */
-	private String courseList;
-
-	/**
 	* 是否启用
 	*/
 	private Integer isEnabled;

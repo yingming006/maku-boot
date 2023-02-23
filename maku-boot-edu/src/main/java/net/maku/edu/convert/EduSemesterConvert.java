@@ -13,9 +13,8 @@ import java.util.List;
 * @author yingming006 yingming006@foxmail.com
 * @since 1.0.0 2022-12-19
 */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface EduSemesterConvert {
-    EduSemesterConvert INSTANCE = Mappers.getMapper(EduSemesterConvert.class);
 
     EduSemesterEntity convert(EduSemesterVO vo);
 

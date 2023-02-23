@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * @author yingming006
@@ -48,14 +47,16 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
     private final EduExamStudentService eduExamStudentService;
     private final EduStudentService eduStudentService;
     private final EduExamClazzService eduExamClazzService;
+    private final EduExamStudentConvert eduExamStudentConvert;
 
     private Long examId;
 
-    public EduExamScoreListener(EduExamScoreService eduExamScoreService, EduExamStudentService eduExamStudentService, EduStudentService eduStudentService, EduExamClazzService eduExamClazzService) {
+    public EduExamScoreListener(EduExamScoreService eduExamScoreService, EduExamStudentService eduExamStudentService, EduStudentService eduStudentService, EduExamClazzService eduExamClazzService, EduExamStudentConvert eduExamStudentConvert) {
         this.eduExamScoreService = eduExamScoreService;
         this.eduExamStudentService = eduExamStudentService;
         this.eduStudentService = eduStudentService;
         this.eduExamClazzService = eduExamClazzService;
+        this.eduExamStudentConvert = eduExamStudentConvert;
     }
 
     @Override
@@ -123,7 +124,7 @@ public class EduExamScoreListener extends AnalysisEventListener<Map<Integer, Str
             clazzRank.set(1);
         });
 
-        List<EduExamStudentEntity> result = EduExamStudentConvert.INSTANCE.convertToList(list);
+        List<EduExamStudentEntity> result = eduExamStudentConvert.convertToList(list);
 
         eduExamStudentService.updateBatchById(result);
     }

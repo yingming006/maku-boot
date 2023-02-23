@@ -12,6 +12,7 @@ import net.maku.edu.service.EduExamScoreService;
 import net.maku.edu.vo.EduExamScoreVO;
 import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,12 +28,14 @@ import java.util.List;
 @AllArgsConstructor
 public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, EduExamScoreEntity> implements EduExamScoreService {
 
+    @Autowired
+    private EduExamScoreConvert eduExamScoreConvert;
 
     @Override
     public PageResult<EduExamScoreVO> page(EduExamScoreQuery query) {
         IPage<EduExamScoreEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(EduExamScoreConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        return new PageResult<>(eduExamScoreConvert.convertList(page.getRecords()), page.getTotal());
     }
 
     private LambdaQueryWrapper<EduExamScoreEntity> getWrapper(EduExamScoreQuery query) {
@@ -42,14 +45,14 @@ public class EduExamScoreServiceImpl extends BaseServiceImpl<EduExamScoreDao, Ed
 
     @Override
     public void save(EduExamScoreVO vo) {
-        EduExamScoreEntity entity = EduExamScoreConvert.INSTANCE.convert(vo);
+        EduExamScoreEntity entity = eduExamScoreConvert.convert(vo);
 
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduExamScoreVO vo) {
-        EduExamScoreEntity entity = EduExamScoreConvert.INSTANCE.convert(vo);
+        EduExamScoreEntity entity = eduExamScoreConvert.convert(vo);
 
         updateById(entity);
     }

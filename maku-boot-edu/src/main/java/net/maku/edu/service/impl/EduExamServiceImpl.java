@@ -93,15 +93,14 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
      * @param vo
      */
     private void saveEduExamCourse(EduExamVO vo) {
-        List<String> courseList = vo.getCourseList();
-        List<String> courseFullScoreList = vo.getCourseFullScoreList();
-        if (!courseList.isEmpty() && !courseFullScoreList.isEmpty()) {
+        List<EduExamVO.ExamCourse> courseList = vo.getCourseList();
+        if (!courseList.isEmpty()) {
             List<EduExamCourseEntity> courseEntities = new ArrayList<>();
             for (int i = 0; i < courseList.size(); i++) {
                 EduExamCourseEntity courseEntity = new EduExamCourseEntity();
                 courseEntity.setExamId(vo.getId());
-                courseEntity.setCourseId(Long.valueOf(courseList.get(i)));
-                courseEntity.setFullScore(Integer.valueOf(courseFullScoreList.get(i)));
+                courseEntity.setCourseId(Long.valueOf(courseList.get(i).getId()));
+                courseEntity.setFullScore(Integer.valueOf(courseList.get(i).getFullScore()));
                 courseEntities.add(courseEntity);
             }
             eduExamCourseService.saveBatch(courseEntities);
@@ -152,6 +151,33 @@ public class EduExamServiceImpl extends BaseServiceImpl<EduExamDao, EduExamEntit
         eduExamClazzService.remove(new LambdaQueryWrapper<EduExamClazzEntity>().in(EduExamClazzEntity::getExamId, idList));
         eduExamCourseService.remove(new LambdaQueryWrapper<EduExamCourseEntity>().in(EduExamCourseEntity::getExamId, idList));
         eduExamStudentDao.delete(new LambdaQueryWrapper<EduExamStudentEntity>().in(EduExamStudentEntity::getExamId, idList));
+    }
+
+    @Override
+    public EduExamVO selectById(Long id) {
+        EduExamEntity entity = baseMapper.selectById(id);
+        EduExamVO vo = eduExamConvert.convert(entity);
+
+        List<EduExamClazzEntity> clazzEntities = eduExamClazzService.list(new LambdaQueryWrapper<EduExamClazzEntity>().eq(EduExamClazzEntity::getExamId, id));
+        List<EduExamCourseEntity> courseEntities = eduExamCourseService.list(new LambdaQueryWrapper<EduExamCourseEntity>().eq(EduExamCourseEntity::getExamId, id));
+
+        List<String> clazzList = new ArrayList<>();
+        for (EduExamClazzEntity eduExamClazzEntity : clazzEntities) {
+            clazzList.add(String.valueOf(eduExamClazzEntity.getClazzId()));
+        }
+
+        List<EduExamVO.ExamCourse> courseList = new ArrayList<>();
+
+        for (EduExamCourseEntity courseEntity : courseEntities) {
+            EduExamVO.ExamCourse examCourse = new EduExamVO.ExamCourse()
+                    .setId(String.valueOf(courseEntity.getCourseId()))
+                    .setFullScore(String.valueOf(courseEntity.getFullScore()));
+            courseList.add(examCourse);
+        }
+
+        vo.setClazzList(clazzList);
+        vo.setCourseList(courseList);
+        return vo;
     }
 
 }

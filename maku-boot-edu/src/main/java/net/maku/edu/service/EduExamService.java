@@ -40,4 +40,11 @@ public interface EduExamService extends BaseService<EduExamEntity> {
      * @param idList
      */
     void delete(List<Long> idList);
+
+    /**
+     * 根据 ID 查询
+     * @param id
+     * @return
+     */
+    EduExamVO selectById(Long id);
 }

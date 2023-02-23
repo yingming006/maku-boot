@@ -32,6 +32,9 @@ public class EduSemesterController {
     @Autowired
     private EduSemesterService eduSemesterService;
 
+    @Autowired
+    private EduSemesterConvert eduSemesterConvert;
+
     @GetMapping("page")
     @Operation(summary = "分页")
     @PreAuthorize("hasAuthority('edu:semester:page')")
@@ -47,7 +50,7 @@ public class EduSemesterController {
     public Result<EduSemesterVO> get(@PathVariable("id") Long id){
         EduSemesterEntity entity = eduSemesterService.getById(id);
 
-        return Result.ok(EduSemesterConvert.INSTANCE.convert(entity));
+        return Result.ok(eduSemesterConvert.convert(entity));
     }
 
     @PostMapping

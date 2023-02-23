@@ -31,6 +31,9 @@ public class EduCourseController {
 
     @Autowired
     private EduCourseService eduCourseService;
+    
+    @Autowired
+    private EduCourseConvert eduCourseConvert;
 
     @GetMapping("page")
     @Operation(summary = "分页")
@@ -47,7 +50,7 @@ public class EduCourseController {
     public Result<EduCourseVO> get(@PathVariable("id") Long id){
         EduCourseEntity entity = eduCourseService.getById(id);
 
-        return Result.ok(EduCourseConvert.INSTANCE.convert(entity));
+        return Result.ok(eduCourseConvert.convert(entity));
     }
 
     @PostMapping

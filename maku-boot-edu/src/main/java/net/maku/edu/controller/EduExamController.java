@@ -48,8 +48,8 @@ public class EduExamController {
     @Operation(summary = "信息")
     @PreAuthorize("hasAuthority('edu:exam:info')")
     public Result<EduExamVO> get(@PathVariable("id") Long id){
-        EduExamEntity entity = eduExamService.getById(id);
-        return Result.ok(eduExamConvert.convert(entity));
+        EduExamVO vo = eduExamService.selectById(id);
+        return Result.ok(vo);
     }
 
     @PostMapping

@@ -56,15 +56,14 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
 
     @Autowired
     private EduExamService eduExamService;
-
     @Autowired
     private EduExamScoreService eduExamScoreService;
-
     @Autowired
     private DictionaryTransService dictionaryTransService;
-
     @Autowired
     private EduExamConvert eduExamConvert;
+    @Autowired
+    private EduExamStudentConvert eduExamStudentConvert;
 
     private final String COURSE_PREFIX = "course_";
 
@@ -180,14 +179,14 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
 
     @Override
     public void save(EduExamStudentVO vo) {
-        EduExamStudentEntity entity = EduExamStudentConvert.INSTANCE.convert(vo);
+        EduExamStudentEntity entity = eduExamStudentConvert.convert(vo);
 
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduExamStudentVO vo) {
-        EduExamStudentEntity entity = EduExamStudentConvert.INSTANCE.convert(vo);
+        EduExamStudentEntity entity = eduExamStudentConvert.convert(vo);
 
         updateById(entity);
     }
@@ -313,9 +312,9 @@ public class EduExamStudentServiceImpl extends BaseServiceImpl<EduExamStudentDao
         list.add(head1);
 
         EduExamVO examVO = eduExamConvert.convert(entity);
-        List<String> courseList = examVO.getCourseList();
-        for (String s : courseList) {
-            String courseName = dictionaryTransService.getDictionaryTransMap().get(Constant.COURSE_DICT_PREFIX + s);
+        List<EduExamVO.ExamCourse> courseList = examVO.getCourseList();
+        for (EduExamVO.ExamCourse course : courseList) {
+            String courseName = dictionaryTransService.getDictionaryTransMap().get(Constant.COURSE_DICT_PREFIX + course.getId());
             List<String> head = ListUtils.newArrayList(courseName);
             list.add(head);
         }

@@ -19,4 +19,13 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <select id="selectVOById" resultType="net.maku.edu.vo.EduClazzVO">
+        SELECT cla.id,cla.no,cla.name,cla.entrance_year,cla.grade_id,cla.semester_id,cla.headmaster_id
+            ,cla.is_enabled,cla.deleted,cla.version,cla.creator,cla.create_time,cla.updater,cla.update_time
+            ,eg.name AS gradeName,et.name AS headmasterName
+            FROM edu_clazz cla
+                LEFT JOIN edu_grade eg ON cla.grade_id = eg.id
+                LEFT JOIN edu_teacher et ON cla.headmaster_id = et.id
+            WHERE cla.id = #{id}
+    </select>
 </mapper>

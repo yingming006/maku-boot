@@ -13,7 +13,9 @@ import java.util.List;
 * @author yingming006 yingming006@foxmail.com
 * @since 1.0.0 2022-12-15
 */
+@Mapper(componentModel = "spring")
 public interface EduExamConvert {
+
     EduExamEntity convert(EduExamVO vo);
 
     EduExamVO convert(EduExamEntity entity);

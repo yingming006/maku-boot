@@ -48,4 +48,11 @@ public interface EduClazzService extends BaseService<EduClazzEntity> {
      * @return
      */
     List<SysDictVO.DictData> getDictData(EduClazzQuery query);
+
+    /**
+     * 通过id查询，包括开设课程
+     * @param id
+     * @return
+     */
+    EduClazzVO detail(Long id);
 }

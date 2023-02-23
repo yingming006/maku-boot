@@ -33,6 +33,9 @@ public class EduClazzController {
     @Autowired
     private EduClazzService eduClazzService;
 
+    @Autowired
+    private EduClazzConvert eduClazzConvert;
+
     @GetMapping("page")
     @Operation(summary = "分页")
     @PreAuthorize("hasAuthority('edu:clazz:page')")
@@ -47,8 +50,15 @@ public class EduClazzController {
     @PreAuthorize("hasAuthority('edu:clazz:info')")
     public Result<EduClazzVO> get(@PathVariable("id") Long id){
         EduClazzEntity entity = eduClazzService.getById(id);
+        return Result.ok(eduClazzConvert.convert(entity));
+    }
 
-        return Result.ok(EduClazzConvert.INSTANCE.convert(entity));
+    @GetMapping("/{id}/detail")
+    @Operation(summary = "班级信息，包括开设课程")
+    @PreAuthorize("hasAuthority('edu:clazz:info')")
+    public Result<EduClazzVO> detail(@PathVariable("id") Long id){
+        EduClazzVO vo = eduClazzService.detail(id);
+        return Result.ok(vo);
     }
 
     @PostMapping

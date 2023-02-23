@@ -12,6 +12,7 @@ import net.maku.edu.query.EduTeacherQuery;
 import net.maku.edu.vo.EduTeacherVO;
 import net.maku.edu.dao.EduTeacherDao;
 import net.maku.edu.service.EduTeacherService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +28,14 @@ import java.util.List;
 @AllArgsConstructor
 public class EduTeacherServiceImpl extends BaseServiceImpl<EduTeacherDao, EduTeacherEntity> implements EduTeacherService {
 
+    @Autowired
+    private EduTeacherConvert eduTeacherConvert;
+
     @Override
     public PageResult<EduTeacherVO> page(EduTeacherQuery query) {
         IPage<EduTeacherEntity> page = baseMapper.selectPage(getPage(query), getWrapper(query));
 
-        return new PageResult<>(EduTeacherConvert.INSTANCE.convertList(page.getRecords()), page.getTotal());
+        return new PageResult<>(eduTeacherConvert.convertList(page.getRecords()), page.getTotal());
     }
 
     private LambdaQueryWrapper<EduTeacherEntity> getWrapper(EduTeacherQuery query){
@@ -42,14 +46,14 @@ public class EduTeacherServiceImpl extends BaseServiceImpl<EduTeacherDao, EduTea
 
     @Override
     public void save(EduTeacherVO vo) {
-        EduTeacherEntity entity = EduTeacherConvert.INSTANCE.convert(vo);
+        EduTeacherEntity entity = eduTeacherConvert.convert(vo);
 
         baseMapper.insert(entity);
     }
 
     @Override
     public void update(EduTeacherVO vo) {
-        EduTeacherEntity entity = EduTeacherConvert.INSTANCE.convert(vo);
+        EduTeacherEntity entity = eduTeacherConvert.convert(vo);
 
         updateById(entity);
     }
