@@ -12,6 +12,7 @@ import java.util.List;
  * 全部字典
  *
  * @author 阿沐 babamu@126.com
+ * <a href="https://maku.net">MAKU</a>
  */
 @Data
 @Schema(description = "全部字典")
