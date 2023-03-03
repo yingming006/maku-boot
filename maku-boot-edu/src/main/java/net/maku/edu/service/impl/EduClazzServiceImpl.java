@@ -2,19 +2,19 @@ package net.maku.edu.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.AllArgsConstructor;
 import net.maku.edu.convert.EduClazzConvert;
-import net.maku.edu.dao.EduClazzCourseTeacherDao;
+import net.maku.edu.convert.EduClazzCourseTeacherConvert;
 import net.maku.edu.dao.EduClazzDao;
 import net.maku.edu.entity.EduClazzCourseTeacherEntity;
 import net.maku.edu.entity.EduClazzEntity;
+import net.maku.edu.query.EduClazzCourseTeacherQuery;
 import net.maku.edu.query.EduClazzQuery;
 import net.maku.edu.service.EduClazzCourseTeacherService;
 import net.maku.edu.service.EduClazzService;
-import net.maku.edu.vo.EduClazzDetailVO;
+import net.maku.edu.vo.EduClazzCourseTeacherVO;
 import net.maku.edu.vo.EduClazzVO;
 import net.maku.edu.vo.SysDictVO;
 import net.maku.framework.common.utils.PageResult;
@@ -38,7 +38,9 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
     @Autowired
     private EduClazzConvert eduClazzConvert;
     @Autowired
-    private EduClazzCourseTeacherDao eduClazzCourseTeacherDao;
+    private EduClazzCourseTeacherConvert eduClazzCourseTeacherConvert;
+    @Autowired
+    private EduClazzCourseTeacherService eduClazzCourseTeacherService;
 
     @Override
     public PageResult<EduClazzVO> page(EduClazzQuery query) {
@@ -88,9 +90,17 @@ public class EduClazzServiceImpl extends BaseServiceImpl<EduClazzDao, EduClazzEn
     @Override
     public EduClazzVO detail(Long id) {
         EduClazzVO vo = baseMapper.selectVOById(id);
-        List<EduClazzDetailVO> details = eduClazzCourseTeacherDao.detail(new QueryWrapper<EduClazzCourseTeacherEntity>().eq("clazz_id", id));
+        List<EduClazzCourseTeacherVO> details = eduClazzCourseTeacherService.list(new EduClazzCourseTeacherQuery().setClazzId(id));
         vo.setDetails(details);
         return vo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateCourse(EduClazzVO vo) {
+        eduClazzCourseTeacherService.remove(new LambdaQueryWrapper<EduClazzCourseTeacherEntity>().eq(EduClazzCourseTeacherEntity::getClazzId, vo.getId()));
+        List<EduClazzCourseTeacherVO> vos = vo.getDetails();
+        eduClazzCourseTeacherService.saveBatch(eduClazzCourseTeacherConvert.convertToList(vos));
     }
 
 }

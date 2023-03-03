@@ -3,9 +3,8 @@ package net.maku.edu.dao;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import net.maku.edu.entity.EduClazzCourseTeacherEntity;
-import net.maku.edu.entity.EduExamStudentEntity;
-import net.maku.edu.vo.EduClazzDetailVO;
-import net.maku.edu.vo.EduClazzVO;
+import net.maku.edu.query.EduClazzCourseTeacherQuery;
+import net.maku.edu.vo.EduClazzCourseTeacherVO;
 import net.maku.framework.mybatis.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,5 +20,5 @@ import java.util.List;
 @Mapper
 public interface EduClazzCourseTeacherDao extends BaseDao<EduClazzCourseTeacherEntity> {
 
-    List<EduClazzDetailVO> detail(@Param(Constants.WRAPPER) QueryWrapper<EduClazzCourseTeacherEntity> wrapper);
+    List<EduClazzCourseTeacherVO> list(@Param(Constants.WRAPPER) QueryWrapper<EduClazzCourseTeacherQuery> wrapper);
 }

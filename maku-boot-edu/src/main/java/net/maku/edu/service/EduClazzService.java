@@ -50,9 +50,15 @@ public interface EduClazzService extends BaseService<EduClazzEntity> {
     List<SysDictVO.DictData> getDictData(EduClazzQuery query);
 
     /**
-     * 通过id查询，包括开设课程
+     * 通过id查询课程详情，包括开设课程
      * @param id
      * @return
      */
     EduClazzVO detail(Long id);
+
+    /**
+     * 修改开设课程
+     * @param vo
+     */
+    void updateCourse(EduClazzVO vo);
 }

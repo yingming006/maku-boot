@@ -1,15 +1,9 @@
 package net.maku.edu.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.experimental.Accessors;
-import net.maku.framework.common.utils.DateUtils;
 
-import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
 * 班级信息详情 开设课程、授课老师
@@ -19,7 +13,7 @@ import java.util.List;
 */
 @Data
 @Schema(description = "班级信息表")
-public class EduClazzDetailVO implements Serializable {
+public class EduClazzCourseTeacherVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Schema(description = "班级id")

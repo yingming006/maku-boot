@@ -97,4 +97,13 @@ public class EduClazzController {
         PageResult<SysDictVO.DictData> page = new PageResult<>(list, list.size());
         return Result.ok(page);
     }
+
+    @PutMapping("/updateCourseTeacher")
+    @Operation(summary = "修改开设课程")
+    @PreAuthorize("hasAuthority('edu:clazz:update')")
+    public Result<String> updateCourse(@RequestBody @Valid EduClazzVO vo){
+        eduClazzService.updateCourse(vo);
+
+        return Result.ok();
+    }
 }

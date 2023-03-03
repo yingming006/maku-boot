@@ -9,7 +9,7 @@
         <result property="courseId" column="course_id"/>
     </resultMap>
 
-    <select id="detail" resultType="net.maku.edu.vo.EduClazzDetailVO">
+    <select id="list" resultType="net.maku.edu.vo.EduClazzCourseTeacherVO">
         SELECT *
         FROM (SELECT cst.clazz_id,cst.course_id,cst.teacher_id,cla.name AS clazzName,cou.name AS courseName,tea.name AS teacherName
               FROM edu_clazz_course_teacher cst
