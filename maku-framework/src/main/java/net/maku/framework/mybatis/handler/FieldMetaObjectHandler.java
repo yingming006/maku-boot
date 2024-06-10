@@ -5,7 +5,7 @@ import net.maku.framework.security.user.SecurityUser;
 import net.maku.framework.security.user.UserDetail;
 import org.apache.ibatis.reflection.MetaObject;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * mybatis-plus 自动填充字段
@@ -25,29 +25,33 @@ public class FieldMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         UserDetail user = SecurityUser.getUser();
-        Date date = new Date();
+        LocalDateTime now = LocalDateTime.now();
 
-        // 创建者
-        strictInsertFill(metaObject, CREATOR, Long.class, user.getId());
+        // 用户字段填充
+        if (user != null) {
+            // 创建者
+            setFieldValByName(CREATOR, user.getId(), metaObject);
+            // 更新者
+            setFieldValByName(UPDATER, user.getId(), metaObject);
+            // 创建者所属机构
+            setFieldValByName(ORG_ID, user.getOrgId(), metaObject);
+        }
+
         // 创建时间
-        strictInsertFill(metaObject, CREATE_TIME, Date.class, date);
-        // 更新者
-        strictInsertFill(metaObject, UPDATER, Long.class, user.getId());
+        setFieldValByName(CREATE_TIME, now, metaObject);
         // 更新时间
-        strictInsertFill(metaObject, UPDATE_TIME, Date.class, date);
-        // 创建者所属机构
-        strictInsertFill(metaObject, ORG_ID, Long.class, user.getOrgId());
+        setFieldValByName(UPDATE_TIME, now, metaObject);
         // 版本号
-        strictInsertFill(metaObject, VERSION, Integer.class, 0);
+        setFieldValByName(VERSION, 0, metaObject);
         // 删除标识
-        strictInsertFill(metaObject, DELETED, Integer.class, 0);
+        setFieldValByName(DELETED, 0, metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         // 更新者
-        strictUpdateFill(metaObject, UPDATER, Long.class, SecurityUser.getUserId());
+        setFieldValByName(UPDATER, SecurityUser.getUserId(), metaObject);
         // 更新时间
-        strictUpdateFill(metaObject, UPDATE_TIME, Date.class, new Date());
+        setFieldValByName(UPDATE_TIME, LocalDateTime.now(), metaObject);
     }
 }

@@ -66,6 +66,11 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
         return code.equalsIgnoreCase(captcha);
     }
 
+    @Override
+    public boolean isCaptchaEnabled() {
+        return sysParamsService.getBoolean(SysParamsEnum.LOGIN_CAPTCHA.name());
+    }
+
     private String getCache(String key) {
         key = RedisKeys.getCaptchaKey(key);
         String captcha = (String) redisCache.get(key);
@@ -77,12 +82,4 @@ public class SysCaptchaServiceImpl implements SysCaptchaService {
         return captcha;
     }
 
-    /**
-     * 是否开启登录验证码
-     *
-     * @return true：开启  false：关闭
-     */
-    private boolean isCaptchaEnabled() {
-        return sysParamsService.getBoolean(SysParamsEnum.LOGIN_CAPTCHA.name());
-    }
 }

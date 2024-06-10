@@ -7,7 +7,7 @@ import lombok.Data;
 import net.maku.framework.common.utils.DateUtils;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,6 +28,10 @@ public class SysRoleVO implements Serializable {
     @NotBlank(message = "角色名称不能为空")
     private String name;
 
+    @Schema(description = "角色编码")
+    @NotBlank(message = "角色编码不能为空")
+    private String roleCode;
+
     @Schema(description = "备注")
     private String remark;
 
@@ -42,6 +46,6 @@ public class SysRoleVO implements Serializable {
 
     @Schema(description = "创建时间")
     @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }

@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,8 @@ public class UserDetail implements UserDetails {
     private Long orgId;
     private Integer status;
     private Integer superAdmin;
+    private Long tenantId;
+    private LocalDateTime createTime;
 
     /**
      * 数据权限范围

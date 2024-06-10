@@ -5,8 +5,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import net.maku.framework.common.constant.Constant;
 import net.maku.framework.common.utils.Result;
+import net.maku.framework.operatelog.annotations.OperateLog;
+import net.maku.framework.operatelog.enums.OperateTypeEnum;
 import net.maku.framework.security.user.SecurityUser;
 import net.maku.framework.security.user.UserDetail;
 import net.maku.system.convert.SysMenuConvert;
@@ -69,7 +70,7 @@ public class SysMenuController {
         SysMenuVO vo = SysMenuConvert.INSTANCE.convert(entity);
 
         // 获取上级菜单名称
-        if (!Constant.ROOT.equals(entity.getPid())) {
+        if (entity.getPid() != null) {
             SysMenuEntity parentEntity = sysMenuService.getById(entity.getPid());
             vo.setParentName(parentEntity.getName());
         }
@@ -79,6 +80,7 @@ public class SysMenuController {
 
     @PostMapping
     @Operation(summary = "保存")
+    @OperateLog(type = OperateTypeEnum.INSERT)
     @PreAuthorize("hasAuthority('sys:menu:save')")
     public Result<String> save(@RequestBody @Valid SysMenuVO vo) {
         sysMenuService.save(vo);
@@ -88,6 +90,7 @@ public class SysMenuController {
 
     @PutMapping
     @Operation(summary = "修改")
+    @OperateLog(type = OperateTypeEnum.UPDATE)
     @PreAuthorize("hasAuthority('sys:menu:update')")
     public Result<String> update(@RequestBody @Valid SysMenuVO vo) {
         sysMenuService.update(vo);
@@ -97,6 +100,7 @@ public class SysMenuController {
 
     @DeleteMapping("{id}")
     @Operation(summary = "删除")
+    @OperateLog(type = OperateTypeEnum.DELETE)
     @PreAuthorize("hasAuthority('sys:menu:delete')")
     public Result<String> delete(@PathVariable("id") Long id) {
         // 判断是否有子菜单或按钮

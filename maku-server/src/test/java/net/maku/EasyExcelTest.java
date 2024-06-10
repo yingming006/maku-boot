@@ -2,14 +2,14 @@ package net.maku;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
-import net.maku.framework.common.excel.DateConverter;
 import net.maku.framework.common.excel.ExcelFinishCallBack;
+import net.maku.framework.common.excel.LocalDateTimeConverter;
 import net.maku.framework.common.utils.ExcelUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ public class EasyExcelTest {
         excelClass.setNumber(1);
         excelClass.setDecimals(1.2);
         excelClass.setString("test");
-        excelClass.setDate(new Date());
+        excelClass.setDate(LocalDateTime.now());
         List<ExcelClass> data = Arrays.asList(excelClass, excelClass, excelClass);
         if (file.exists()) {
             ExcelUtils.excelExport(ExcelClass.class, file, data);
@@ -43,7 +43,7 @@ public class EasyExcelTest {
         excelClass.setNumber(1);
         excelClass.setDecimals(1.2);
         excelClass.setString("test");
-        excelClass.setDate(new Date());
+        excelClass.setDate(LocalDateTime.now());
         List<ExcelClass> data = Arrays.asList(excelClass, excelClass, excelClass, excelClass, excelClass, excelClass, excelClass);
         if (file.exists()) {
             ExcelUtils.excelExport(ExcelClass.class, file, data);
@@ -64,8 +64,8 @@ public class EasyExcelTest {
         @ExcelProperty("小数")
         private Double decimals;
 
-        @ExcelProperty(value = "日期", converter = DateConverter.class)
-        private Date date;
+        @ExcelProperty(value = "日期", converter = LocalDateTimeConverter.class)
+        private LocalDateTime date;
     }
 
 }

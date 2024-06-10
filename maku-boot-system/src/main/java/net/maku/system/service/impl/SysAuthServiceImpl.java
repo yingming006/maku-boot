@@ -1,23 +1,20 @@
 package net.maku.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import lombok.AllArgsConstructor;
 import net.maku.api.module.message.SmsApi;
 import net.maku.framework.common.constant.Constant;
 import net.maku.framework.common.exception.ServerException;
 import net.maku.framework.security.cache.TokenStoreCache;
+import net.maku.framework.security.crypto.Sm2Util;
 import net.maku.framework.security.mobile.MobileAuthenticationToken;
+import net.maku.framework.security.third.ThirdAuthenticationToken;
+import net.maku.framework.security.third.ThirdLogin;
 import net.maku.framework.security.user.UserDetail;
-import net.maku.framework.security.utils.TokenUtils;
 import net.maku.system.enums.LoginOperationEnum;
-import net.maku.system.service.SysAuthService;
-import net.maku.system.service.SysCaptchaService;
-import net.maku.system.service.SysLogLoginService;
-import net.maku.system.service.SysUserService;
-import net.maku.system.vo.SysAccountLoginVO;
-import net.maku.system.vo.SysMobileLoginVO;
-import net.maku.system.vo.SysTokenVO;
-import net.maku.system.vo.SysUserVO;
+import net.maku.system.service.*;
+import net.maku.system.vo.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,10 +35,11 @@ public class SysAuthServiceImpl implements SysAuthService {
     private final AuthenticationManager authenticationManager;
     private final SysLogLoginService sysLogLoginService;
     private final SysUserService sysUserService;
+    private final SysUserTokenService sysUserTokenService;
     private final SmsApi smsApi;
-    
+
     @Override
-    public SysTokenVO loginByAccount(SysAccountLoginVO login) {
+    public SysUserTokenVO loginByAccount(SysAccountLoginVO login) {
         // 验证码效验
         boolean flag = sysCaptchaService.validate(login.getKey(), login.getCaptcha());
         if (!flag) {
@@ -55,7 +53,7 @@ public class SysAuthServiceImpl implements SysAuthService {
         try {
             // 用户认证
             authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
+                    new UsernamePasswordAuthenticationToken(login.getUsername(), Sm2Util.decrypt(login.getPassword())));
         } catch (BadCredentialsException e) {
             throw new ServerException("用户名或密码错误");
         }
@@ -64,16 +62,16 @@ public class SysAuthServiceImpl implements SysAuthService {
         UserDetail user = (UserDetail) authentication.getPrincipal();
 
         // 生成 accessToken
-        String accessToken = TokenUtils.generator();
+        SysUserTokenVO userTokenVO = sysUserTokenService.createToken(user.getId());
 
         // 保存用户信息到缓存
-        tokenStoreCache.saveUser(accessToken, user);
+        tokenStoreCache.saveUser(userTokenVO.getAccessToken(), user);
 
-        return new SysTokenVO(accessToken);
+        return userTokenVO;
     }
 
     @Override
-    public SysTokenVO loginByMobile(SysMobileLoginVO login) {
+    public SysUserTokenVO loginByMobile(SysMobileLoginVO login) {
         Authentication authentication;
         try {
             // 用户认证
@@ -87,12 +85,37 @@ public class SysAuthServiceImpl implements SysAuthService {
         UserDetail user = (UserDetail) authentication.getPrincipal();
 
         // 生成 accessToken
-        String accessToken = TokenUtils.generator();
+        SysUserTokenVO userTokenVO = sysUserTokenService.createToken(user.getId());
 
         // 保存用户信息到缓存
-        tokenStoreCache.saveUser(accessToken, user);
+        tokenStoreCache.saveUser(userTokenVO.getAccessToken(), user);
 
-        return new SysTokenVO(accessToken);
+        return userTokenVO;
+    }
+
+    @Override
+    public SysUserTokenVO loginByThird(SysThirdCallbackVO login) {
+        Authentication authentication;
+        try {
+            // 转换对象
+            ThirdLogin thirdLogin = BeanUtil.copyProperties(login, ThirdLogin.class);
+
+            // 用户认证
+            authentication = authenticationManager.authenticate(new ThirdAuthenticationToken(thirdLogin));
+        } catch (BadCredentialsException e) {
+            throw new ServerException("第三方登录失败");
+        }
+
+        // 用户信息
+        UserDetail user = (UserDetail) authentication.getPrincipal();
+
+        // 生成 accessToken
+        SysUserTokenVO userTokenVO = sysUserTokenService.createToken(user.getId());
+
+        // 保存用户信息到缓存
+        tokenStoreCache.saveUser(userTokenVO.getAccessToken(), user);
+
+        return userTokenVO;
     }
 
     @Override
@@ -110,12 +133,27 @@ public class SysAuthServiceImpl implements SysAuthService {
     }
 
     @Override
+    public AccessTokenVO getAccessToken(String refreshToken) {
+        SysUserTokenVO token = sysUserTokenService.refreshToken(refreshToken);
+
+        // 封装 AccessToken
+        AccessTokenVO accessToken = new AccessTokenVO();
+        accessToken.setAccessToken(token.getAccessToken());
+        accessToken.setAccessTokenExpire(token.getAccessTokenExpire());
+
+        return accessToken;
+    }
+
+    @Override
     public void logout(String accessToken) {
         // 用户信息
         UserDetail user = tokenStoreCache.getUser(accessToken);
 
         // 删除用户信息
         tokenStoreCache.deleteUser(accessToken);
+
+        // Token过期
+        sysUserTokenService.expireToken(user.getId());
 
         // 保存登录日志
         sysLogLoginService.save(user.getUsername(), Constant.SUCCESS, LoginOperationEnum.LOGOUT_SUCCESS.getValue());

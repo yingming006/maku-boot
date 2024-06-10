@@ -6,7 +6,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,7 +47,7 @@ public class RedisCache {
     }
 
     public void set(String key, Object value) {
-        set(key, value, DEFAULT_EXPIRE);
+        redisTemplate.opsForValue().set(key, value);
     }
 
     public Object get(String key, long expire) {
@@ -66,6 +68,10 @@ public class RedisCache {
 
     public Boolean hasKey(String key) {
         return redisTemplate.hasKey(key);
+    }
+
+    public Set<String> keys(String pattern) {
+        return redisTemplate.keys(pattern);
     }
 
     public void delete(String key) {
@@ -111,6 +117,14 @@ public class RedisCache {
 
     public void expire(String key, long expire) {
         redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+    }
+
+    public void expireAt(String key, Date expire) {
+        redisTemplate.expireAt(key, expire);
+    }
+
+    public Long getExpire(String key) {
+        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
     public void hDel(String key, Object... fields) {

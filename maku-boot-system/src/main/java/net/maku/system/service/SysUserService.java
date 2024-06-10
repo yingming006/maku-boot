@@ -5,6 +5,8 @@ import net.maku.framework.mybatis.service.BaseService;
 import net.maku.system.entity.SysUserEntity;
 import net.maku.system.query.SysRoleUserQuery;
 import net.maku.system.query.SysUserQuery;
+import net.maku.system.vo.SysUserAvatarVO;
+import net.maku.system.vo.SysUserBaseVO;
 import net.maku.system.vo.SysUserVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +26,19 @@ public interface SysUserService extends BaseService<SysUserEntity> {
 
     void update(SysUserVO vo);
 
+    void updateLoginInfo(SysUserBaseVO vo);
+
+    void updateAvatar(SysUserAvatarVO avatar);
+
     void delete(List<Long> idList);
+
+    /**
+     * 获取用户姓名列表
+     *
+     * @param idList 用户ID列表
+     * @return 用户姓名列表
+     */
+    List<String> getRealNameList(List<Long> idList);
 
     SysUserVO getByMobile(String mobile);
 

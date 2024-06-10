@@ -1,10 +1,12 @@
 package net.maku.framework.common.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.converters.longconverter.LongStringConverter;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.fhs.common.utils.ConverterUtils;
 import com.fhs.core.trans.anno.Trans;
@@ -23,6 +25,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,7 +78,7 @@ public class ExcelUtils {
      * @param <T>   数据类型
      * @param file  文件
      * @param clazz 模板类
-     * @return java.util.List list
+     * @return java.util.List
      */
     public static <T> List<T> readSync(File file, Class<T> clazz) {
         return readSync(file, clazz, 1, 0, ExcelTypeEnum.XLSX);
@@ -119,7 +123,7 @@ public class ExcelUtils {
      */
     public static <T> void excelExport(Class<T> head, File file, String sheetName, List<T> data) {
         try {
-            EasyExcel.write(file, head).sheet(sheetName).doWrite(data);
+            EasyExcel.write(file, head).sheet(sheetName).registerConverter(new LongStringConverter()).doWrite(data);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -136,16 +140,46 @@ public class ExcelUtils {
      */
     public static <T> void excelExport(Class<T> head, String excelName, String sheetName, List<T> data) {
         try {
-            HttpServletResponse response = HttpContextUtils.getHttpServletResponse();
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            response.setCharacterEncoding("utf-8");
-            // 这里URLEncoder.encode可以防止中文乱码 当然和easy excel没有关系
-            String fileName = URLUtil.encode(excelName).replaceAll("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
-            EasyExcel.write(response.getOutputStream(), head).sheet(StringUtils.isBlank(sheetName) ? "sheet1" : sheetName).doWrite(data);
+            HttpServletResponse response = getExportResponse(excelName);
+
+            EasyExcel.write(response.getOutputStream(), head).sheet(StringUtils.isBlank(sheetName) ? "sheet1" : sheetName)
+                    .registerConverter(new LongStringConverter()).doWrite(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 导出数据到web
+     * 文件下载（失败了会返回一个有部分数据的Excel）
+     *
+     * @param head      类名
+     * @param excelName excel名字
+     * @param sheetName sheet名称
+     * @param data      数据
+     */
+    public static <T> void excelExport(List<List<String>> head, String excelName, String sheetName, List<T> data) {
+        try {
+            HttpServletResponse response = getExportResponse(excelName);
+
+            EasyExcel.write(response.getOutputStream()).head(head).sheet(StringUtils.isBlank(sheetName) ? "sheet1" : sheetName)
+                    .registerConverter(new LongStringConverter()).doWrite(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static HttpServletResponse getExportResponse(String excelName) {
+        HttpServletResponse response = HttpContextUtils.getHttpServletResponse();
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        response.setCharacterEncoding("UTF-8");
+        
+        excelName += DateUtil.format(new Date(), "yyyyMMddHHmmss");
+        String fileName = URLUtil.encode(excelName, StandardCharsets.UTF_8);
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+
+        return response;
     }
 
     /**
@@ -174,7 +208,7 @@ public class ExcelUtils {
                     Field ref = ReflectUtils.getDeclaredField(clazz, trans.ref());
                     ref.setAccessible(true);
                     // 获取字典反向值
-                    String value = dictionaryTransService.getUnTransMap().get(trans.key() + "_" + ref.get(data));
+                    String value = dictionaryTransService.getDictionaryTransMap().get(trans.key() + "_" + ref.get(data));
                     if (StringUtils.isBlank(value)) {
                         continue;
                     }

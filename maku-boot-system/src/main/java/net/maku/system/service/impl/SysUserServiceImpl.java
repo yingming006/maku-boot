@@ -8,19 +8,22 @@ import lombok.SneakyThrows;
 import net.maku.framework.common.constant.Constant;
 import net.maku.framework.common.excel.ExcelFinishCallBack;
 import net.maku.framework.common.exception.ServerException;
-import net.maku.framework.common.utils.PageResult;
-import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
 import net.maku.framework.common.utils.DateUtils;
 import net.maku.framework.common.utils.ExcelUtils;
+import net.maku.framework.common.utils.PageResult;
+import net.maku.framework.mybatis.service.impl.BaseServiceImpl;
+import net.maku.framework.security.cache.TokenStoreCache;
+import net.maku.framework.security.user.SecurityUser;
+import net.maku.framework.security.utils.TokenUtils;
 import net.maku.system.convert.SysUserConvert;
 import net.maku.system.dao.SysUserDao;
 import net.maku.system.entity.SysUserEntity;
 import net.maku.system.enums.SuperAdminEnum;
 import net.maku.system.query.SysRoleUserQuery;
 import net.maku.system.query.SysUserQuery;
-import net.maku.system.service.SysUserPostService;
-import net.maku.system.service.SysUserRoleService;
-import net.maku.system.service.SysUserService;
+import net.maku.system.service.*;
+import net.maku.system.vo.SysUserAvatarVO;
+import net.maku.system.vo.SysUserBaseVO;
 import net.maku.system.vo.SysUserExcelVO;
 import net.maku.system.vo.SysUserVO;
 import org.springframework.stereotype.Service;
@@ -43,6 +46,9 @@ import java.util.Map;
 public class SysUserServiceImpl extends BaseServiceImpl<SysUserDao, SysUserEntity> implements SysUserService {
     private final SysUserRoleService sysUserRoleService;
     private final SysUserPostService sysUserPostService;
+    private final SysUserTokenService sysUserTokenService;
+    private final SysOrgService sysOrgService;
+    private final TokenStoreCache tokenStoreCache;
     private final TransService transService;
 
     @Override
@@ -68,6 +74,13 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserDao, SysUserEntit
 
         // 数据权限
         params.put(Constant.DATA_SCOPE, getDataScope("t1", null));
+
+        // 机构过滤
+        if (query.getOrgId() != null) {
+            // 查询子机构ID列表，包含本机构
+            List<Long> orgList = sysOrgService.getSubOrgIdList(query.getOrgId());
+            params.put("orgList", orgList);
+        }
 
         return params;
     }
@@ -125,6 +138,39 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserDao, SysUserEntit
 
         // 更新用户岗位关系
         sysUserPostService.saveOrUpdate(entity.getId(), vo.getPostIdList());
+
+        // 更新用户缓存权限
+        sysUserTokenService.updateCacheAuthByUserId(entity.getId());
+    }
+
+    @Override
+    public void updateLoginInfo(SysUserBaseVO vo) {
+        SysUserEntity entity = SysUserConvert.INSTANCE.convert(vo);
+        // 设置登录用户ID
+        entity.setId(SecurityUser.getUserId());
+
+        // 判断手机号是否存在
+        SysUserEntity user = baseMapper.getByMobile(entity.getMobile());
+        if (user != null && !user.getId().equals(entity.getId())) {
+            throw new ServerException("手机号已经存在");
+        }
+
+        // 更新用户
+        updateById(entity);
+
+        // 删除用户缓存
+        tokenStoreCache.deleteUser(TokenUtils.getAccessToken());
+    }
+
+    @Override
+    public void updateAvatar(SysUserAvatarVO avatar) {
+        SysUserEntity entity = new SysUserEntity();
+        entity.setId(SecurityUser.getUserId());
+        entity.setAvatar(avatar.getAvatar());
+        updateById(entity);
+
+        // 删除用户缓存
+        tokenStoreCache.deleteUser(TokenUtils.getAccessToken());
     }
 
     @Override
@@ -137,6 +183,15 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserDao, SysUserEntit
 
         // 删除用户岗位关系
         sysUserPostService.deleteByUserIdList(idList);
+    }
+
+    @Override
+    public List<String> getRealNameList(List<Long> idList) {
+        if (idList.isEmpty()) {
+            return null;
+        }
+
+        return baseMapper.selectBatchIds(idList).stream().map(SysUserEntity::getRealName).toList();
     }
 
     @Override
